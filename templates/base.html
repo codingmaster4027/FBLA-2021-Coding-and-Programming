@@ -1,0 +1,46 @@
+<!-- This is the base template for all my other html templates. It includes the common code between all the html templates and puts them in one place so that the style stays the same for all the pages and I can change them all at once if I want to. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<title>
+		{% block title %}
+		{% endblock %}
+	</title>
+
+	<style>
+		body {
+            background-color: #bdb175;
+            {% block text %}
+            {% endblock %}
+        }
+
+        .button {
+            background-color: black;
+            color: white;
+            font-size: 16px;
+            padding: 12px 28px;
+            border-radius: 4px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+            .button:hover {
+                background-color: white;
+                color: black;
+            }
+        {% block style %}
+		{% endblock %}
+	</style>
+</head>
+
+{% block nav %}
+{% endblock %}
+
+<body {% block func %} {% endblock %}>
+
+{% block body %}
+{% endblock %}
+</body>
+</html>

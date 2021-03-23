@@ -1,0 +1,557 @@
+<!-- This is the actual test page, with a 5-question quiz made up of 4 different types of questions: Multiple Choice, True/False, Fill-In-The-Blank, and Dropdown. There is also a 20 minute time limit.  -->
+{% extends "base.html" %}
+
+{% block title %}
+Test!
+{% endblock %}
+
+{% block style %}
+.right {
+    border: 3px;
+    border-style: solid;
+    border-color: #FF0000;
+    padding: 10px;
+    font-size: 25px;
+}
+{% endblock %}
+
+{% block func %}
+onload="startTimer()"
+{% endblock %}
+
+{% block body %}
+    <script>
+        var timerDone = false; 
+
+        function startTimer()
+        {
+            var min = 20
+            var sec = 0
+            var timer = setInterval(
+            function() {
+                if (min == 0 && sec==0)
+                {
+                    timerDone = true; 
+                    check();
+                }
+                else
+                {
+                    document.getElementById('testTimerText').innerHTML = min + ':' + sec;
+                    if (sec == 0)
+                    {
+                        sec = 60;
+                        min--;
+                    }
+
+                    sec--;
+                }
+            }
+            , 1000
+            );
+        }
+
+        var correct;
+        var q5; 
+        var q5Answered = true; 
+        var q5UserAnswer; 
+        var unans;
+
+        var q1ans = true;
+        var q2ans = true;
+        var q3ans = true;
+        var q4ans = true;
+        var q5ans = true;
+
+        function check()
+        { 
+            unans = 0; 
+            var q1 = document.MCQ.getElementsByTagName("input");
+            var q1Answered = true;
+            var q1UserAnswer = document.MCQ.MCQ.value;
+            var q2 = document.TFQ.getElementsByTagName("input");
+            var q2Answered = true; 
+            var q2UserAnswer = document.TFQ.TFQ.value;
+            var q3 = document.getElementById('UserAnswer').value.trim().toLowerCase(); 
+            var q4 = document.getElementById("Dropdown").value; 
+
+            if (checkMultipleChoice(q1, q1Answered) == false)
+            {
+                unans++; 
+                q1UserAnswer = "incorrect";
+                q1ans = false;  
+            }
+            if (checkMultipleChoice(q2, q2Answered) == false)
+            {
+                unans++; 
+                q2UserAnswer = "incorrect"; 
+                q2ans = false; 
+            }
+            if (q3 == "")
+            {
+                unans++; 
+                q3ans = false; 
+            }
+            if (q4 == "choose")
+            {
+                unans++; 
+                q4ans = false; 
+            }
+            var q5Type = document.getElementById("question5").name; 
+            QuestionFive(q5Type); 
+            checkQuestionFiveAnswered(q5, q5Answered, q5Type);
+            if (timerDone == true)
+            {
+                checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type);
+            }
+            else
+            {
+                if (unans >= 1)
+                {
+                    if (confirm("You did not answer " + unans + " question(s)! Are you sure you want to submit?"))
+                    {
+                        checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type); 
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type); 
+                }
+            }
+            
+        }
+
+        function checkMultipleChoice(x, y)
+        {
+            for (i = 0; i < x.length; i++)
+            {
+                if (x[i].checked)
+                {
+                    y = true; 
+                    return y; 
+                    break;  
+                }
+                if (i == x.length-1)
+                {
+                    y = false;
+                    return y;  
+                }
+            }
+        }
+
+        function QuestionFive(q5Type)
+        {
+            if (q5Type == "MCQ1")
+            { 
+                q5 = document.MCQ1.getElementsByTagName("input"); 
+                q5UserAnswer = document.MCQ1.MCQ1.value;   
+            }
+            else if (q5Type == "TFQ1")
+            {
+                q5 = document.TFQ1.getElementsByTagName("input");
+                q5UserAnswer = document.TFQ1.TFQ1.value; 
+            }
+            else if (q5Type == "FITB1")
+            {
+                q5 = document.getElementById('UserAnswer1').value.toLowerCase();
+                q5UserAnswer = document.getElementById('UserAnswer1').value.toLowerCase();
+            }
+            else
+            {
+                q5 = document.getElementById("Dropdown1").value;
+                q5UserAnswer = document.getElementById("Dropdown1").value;
+            }
+        }
+
+        function checkQuestionFiveAnswered(q5, q5Answered, q5Type)
+        {
+            if (q5Type == "MCQ1" || q5Type == "TFQ1")
+            {
+                if (checkMultipleChoice(q5, q5Answered) == false)
+                {
+                    q5UserAnswer = "incorrect"; 
+                    unans++; 
+                    q5ans = false; 
+                }
+            }
+
+            else if (q5Type == "FITB1")
+            {
+                if (q5 == "")
+                {
+                    q5UserAnswer = ""; 
+                    unans++; 
+                    q5ans = false; 
+                }
+            }
+            else
+            {
+                if (q5 == "choose")
+                {
+                    q5UserAnswer = "choose"; 
+                    unans++; 
+                    q5ans = false; 
+                }
+            }
+        }
+
+        function checkAnswers(q1, q2, q3, q4, q5, q5Type)
+        {
+            correct = 0;  
+            if (q1ans == true)
+            {
+                if (q1=="correct")
+                {
+                    correct++;
+                } 
+                var x = document.getElementsByName("MCQ"); 
+                for (i=0; i<5; i++)
+                {
+                    if (x[i].checked)
+                    {
+                        var q1UserAnswerChoice = x[i].id; 
+                        break; 
+                    }
+                }
+                localStorage.setItem("q1UserAnswerChoice", q1UserAnswerChoice)
+            }
+            else
+            {
+                localStorage.setItem("q1UserAnswerChoice", "Unanswered")
+            }
+            
+            if (q2ans == true)
+            {
+                if (q2=="correct")
+                { 
+                    correct++;
+                }
+                var y = document.getElementsByName("TFQ"); 
+                for (j=0; j<3; j++)
+                {
+                    if (y[j].checked)
+                    {
+                        var q2UserAnswerChoice = y[j].id; 
+                        break; 
+                    }
+                }
+                localStorage.setItem("q2UserAnswerChoice", q2UserAnswerChoice)
+            }
+            else
+            {
+                localStorage.setItem("q2UserAnswerChoice", "Unanswered")
+            }
+
+            if (q3ans == true)
+            {
+                if (q3 == document.getElementById("UserAnswer").name)
+                {
+                    correct++;
+                } 
+                localStorage.setItem("q3UserAnswer", q3)
+            }
+            else
+            {
+                localStorage.setItem("q3UserAnswer", "Unanswered")
+            }
+            
+            if (q4ans == true)
+            {
+                if (q4=="correct")
+                {
+                    correct++;
+                }
+                var z = document.getElementById("Dropdown"); 
+                var b = z.selectedIndex; 
+                var q4UserAnswer = z[b].id; 
+                localStorage.setItem("q4UserAnswer", q4UserAnswer)
+            }
+            else
+            {
+                localStorage.setItem("q4UserAnswer", "Unanswered")
+            }
+            
+            if (q5ans == true)
+            {
+                if (q5Type == "MCQ1" || q5Type == "TFQ1")
+                { 
+                    if (q5=="correct")
+                    {
+                        correct++;
+                    }
+                    function getq5UserAnswer(q5Type)
+                    {
+                        var a = document.getElementsByName(q5Type); 
+                        for (l=0; l<5; l++)
+                        {
+                            if (a[l].checked)
+                            {
+                                var q5UserAnswer = a[l].id; 
+                                break; 
+                            }
+                        }
+                        localStorage.setItem("q5UserAnswer", q5UserAnswer)
+                    }
+
+                    getq5UserAnswer(q5Type);        
+                }
+
+                else if (q5Type == "Dropdown1")
+                {
+                    if (q5=="correct")
+                    {
+                        correct++;
+                    }
+                    var c = document.getElementById("Dropdown1"); 
+                    var d = c.selectedIndex; 
+                    var q5UserAnswer = c[d].id; 
+                    localStorage.setItem("q5UserAnswer", q5UserAnswer)
+                }
+
+                else
+                {
+                    if (q5 == document.getElementById("UserAnswer1").name)
+                    {
+                        correct++;
+                    }
+                    localStorage.setItem("q5UserAnswer", q5)
+                }
+            }
+            else
+            {
+                localStorage.setItem("q5UserAnswer", "Unanswered")
+            }
+            
+            var score = (correct/5) * 100;
+
+            localStorage.setItem("score", score);
+
+            location.href = "http://127.0.0.1:5000/score";
+        }
+
+        
+        
+        
+    </script>
+    
+    <div id="testTimer" class="right">
+        <p id="testTimerText"></p>
+    </div>
+
+    <form name="MCQ" id="MCQ">
+        <div>
+            <p> 1. {{ MCQ }} </p>
+            {% if MCQCorrect.strip() == "A" %}
+            <p> <input type="radio" name="MCQ" value="correct" id="A"> {{ A }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
+
+            {% elif MCQCorrect.strip() == "B" %}
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="B"> {{ B }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
+            {% elif MCQCorrect.strip() == "C" %}
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="C"> {{ C }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
+            {% else %}
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="D"> {{ D }} </p>
+            {% endif %}
+        </div>
+    </form>
+
+    <br>
+
+    <form name="TFQ" id="TFQ">
+        <div>
+            <p> 2. {{ TFQ }} </p>
+            {% if TFCorrect.strip() == "True" %}
+            <p> <input type="radio" name="TFQ" value="correct" id="True"> True </p>
+            <p> <input type="radio" name="TFQ" value="incorrect" id="False"> False </p>
+            {% else %}
+            <p> <input type="radio" name="TFQ" value="incorrect" id="True"> True </p>
+            <p> <input type="radio" name="TFQ" value="correct" id="False"> False </p>
+            {% endif %}
+
+        </div>
+    </form>
+    <br>
+    <form name="FITB" id="FITB">
+        <div>
+            <p> 3. {{ FITBQ }} </p>
+            <br>
+            <input type="text" name="{{FITBCorrect}}" id="UserAnswer" autocomplete="off">
+        </div>
+    </form>
+    <br>
+    <br>
+    <form>
+        <label> 4. {{ DQ }} </label>
+        {% if DCorrect.strip() == "1" %}
+        <select id="Dropdown">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="correct" id="1"> {{ D1 }} </option>
+            <option value="incorrect" id="2"> {{ D2 }} </option>
+            <option value="incorrect" id="3"> {{ D3 }} </option>
+            <option value="incorrect" id="4"> {{ D4 }} </option>
+        </select>
+
+        {% elif DCorrect.strip() == "2" %}
+        <select id="Dropdown">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="incorrect" id="1"> {{ D1 }} </option>
+            <option value="correct" id="2"> {{ D2 }} </option>
+            <option value="incorrect" id="3"> {{ D3 }} </option>
+            <option value="incorrect" id="4"> {{ D4 }} </option>
+        </select>
+
+        {% elif DCorrect.strip() == "3" %}
+        <select id="Dropdown">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="incorrect" id="1"> {{ D1 }} </option>
+            <option value="incorrect" id="2"> {{ D2 }} </option>
+            <option value="correct" id="3"> {{ D3 }} </option>
+            <option value="incorrect" id="4"> {{ D4 }} </option>
+        </select>
+        {% else %}
+        <select id="Dropdown">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="incorrect" id="1"> {{ D1 }} </option>
+            <option value="incorrect" id="2"> {{ D2 }} </option>
+            <option value="incorrect" id="3"> {{ D3 }} </option>
+            <option value="correct" id="4"> {{ D4 }} </option>
+        </select>
+        {% endif %}
+    </form>
+    <br>
+
+    {% if randomQ == "MCQ" %}
+    <form name="MCQ1" id="question5">
+        <div>
+            <p> 5. {{ MCQQ1.strip() }} </p>
+            {% if MCQCorrect1 == "A" %}
+            <p> <input type="radio" name="MCQ1" value="correct" id="A"> {{ MCQA1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            <br>
+            <br>
+
+            {% elif MCQCorrect1.strip() == "B" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="B"> {{ MCQB1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            <br>
+            <br>
+
+            {% elif MCQCorrect1.strip() == "C" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="C"> {{ MCQC1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            <br>
+            <br>
+
+            {% else %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="D"> {{ MCQD1 }} </p>
+            <br>
+            <br>
+            {% endif %}
+        </div>
+    </form>
+
+    {% elif randomQ == "TFQ" %}
+    <form name="TFQ1" id="question5">
+        <div>
+            <p> 5. {{ TFQ1 }} </p>
+            {% if TFCorrect1.strip() == "True" %}
+            <p> <input type="radio" name="TFQ1" value="correct" id="True"> True </p>
+            <p> <input type="radio" name="TFQ1" value="incorrect" id="False"> False </p>
+            <br>
+            <br>
+
+            {% else %}
+            <p> <input type="radio" name="TFQ1" value="incorrect" id="True"> True </p>
+            <p> <input type="radio" name="TFQ1" value="correct" id="False"> False </p>
+            <br>
+            <br>
+            {% endif %}
+        </div>
+    </form>
+
+    {% elif randomQ == "FITB" %}
+    <form name="FITB1" id="question5">
+        <div>
+            <p> 5. {{ FITBQ1 }} </p>
+            <br>
+            <input type="text" name="{{FITBCorrect1}}" id="UserAnswer1" autocomplete="off">
+            <br>
+            <br>
+        </div>
+    </form>
+
+    {% else %}
+    <form name="Dropdown1" id="question5">
+        <label> 5. {{ DQ1 }} </label>
+        {% if DCorrect1.strip() == "1" %}
+        <select id="Dropdown1">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="correct" id="1"> {{ D11 }} </option>
+            <option value="incorrect" id="2"> {{ D21 }} </option>
+            <option value="incorrect" id="3"> {{ D31 }} </option>
+            <option value="incorrect" id="4"> {{ D41 }} </option>
+        </select>
+        <br>
+        <br>
+
+        {% elif DCorrect1.strip() == "2" %}
+        <select id="Dropdown1">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="correct" id="1"> {{ D11 }} </option>
+            <option value="correct" id="2"> {{ D21 }} </option>
+            <option value="incorrect" id="3"> {{ D31 }} </option>
+            <option value="incorrect" id="4"> {{ D41 }} </option>
+        </select>
+        <br>
+        <br>
+        
+        {% elif DCorrect1.strip() == "3" %}
+        <select id="Dropdown1">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="correct" id="1"> {{ D11 }} </option>
+            <option value="incorrect" id="2"> {{ D21 }} </option>
+            <option value="correct" id="3"> {{ D31 }} </option>
+            <option value="incorrect" id="4"> {{ D41 }} </option>
+        </select>
+        <br>
+        <br>
+        
+        {% else %}
+        <select id="Dropdown1">
+            <option value="choose" id="0 (you did not select anything)"> Choose </option>
+            <option value="correct" id="1"> {{ D11 }} </option>
+            <option value="incorrect" id="2"> {{ D21 }} </option>
+            <option value="incorrect" id="3"> {{ D31 }} </option>
+            <option value="correct" id="4"> {{ D41 }} </option>
+        </select>
+        <br>
+        <br>
+        
+        {% endif %}
+    </form>
+    {% endif %}
+    <button class="button" type="button" onclick="check()">Submit</button>
+{% endblock %}

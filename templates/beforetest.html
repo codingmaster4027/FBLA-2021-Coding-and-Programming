@@ -1,0 +1,44 @@
+<!-- This is the page which shows the test instructions before the start of the test -->
+{% extends "base.html" %}
+
+{% block title %}
+Test Instructions
+{% endblock %}
+
+{% block text %}
+text-align: center; 
+{% endblock %}
+
+{% block nav %}
+<body {% block func %} {% endblock %}>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="http://127.0.0.1:5000/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:5000/beforetest">Take the Test</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:5000/database">Database of Questions</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+{% block body %}
+<h1>Test Instructions</h1>
+<p>You are about to take a 5-question test which will consist of 4 types of questions: multiple choice, true or false, dropdown, and fill in the blank. You will have 15 minutes to take the test and when you are finished, click the "Submit" button at the bottom of the page. You will receive your score immediately after you submit the test. </p>
+<p>Click the "Start" button below to start the test. You will not be able to pause the timer once you start.</p>
+<button class="button" type="button" onclick="location.href = 'http://127.0.0.1:5000/test'">Start</button>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% endblock %}
