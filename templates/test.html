@@ -23,6 +23,7 @@ onload="startTimer()"
     <script>
         var timerDone = false; 
 
+        //The function to start and run the timer
         function startTimer()
         {
             var min = 20
@@ -50,8 +51,10 @@ onload="startTimer()"
             );
         }
 
+        //The function which is going to check the answers and produce the user's scores. Uses a lot of functions defined below it as well. 
         function check()
         { 
+            //Creates global variables that can be used in other functions
             globalThis.correct;
             globalThis.q5; 
             globalThis.q5UserAnswer; 
@@ -62,6 +65,8 @@ onload="startTimer()"
             globalThis.q4ans = true;
             globalThis.q5ans = true;
             globalThis.unans = 0; 
+
+            //For the first 4 questions, gets the user's answer for that question and/or the value of the user's answer (whether is was correct or not)
             var q1 = document.MCQ.getElementsByTagName("input");
             var q1Answered = true;
             var q1UserAnswer = document.MCQ.MCQ.value;
@@ -71,6 +76,7 @@ onload="startTimer()"
             var q3 = document.getElementById('UserAnswer').value.trim().toLowerCase(); 
             var q4 = document.getElementById("Dropdown").value; 
 
+            //Checks if each of the first four questions was answered or left blank
             if (checkMultipleChoice(q1, q1Answered) == false)
             {
                 unans++; 
@@ -93,9 +99,14 @@ onload="startTimer()"
                 unans++; 
                 q4ans = false; 
             }
+            //Stores in q5Type the type of questions of the 5th question (MCQ, TFQ, FITB, or Dropdown)
             var q5Type = document.getElementById("question5").name; 
             QuestionFive(q5Type); 
+
+            //Checks if the 5th question was answered or left blank
             checkQuestionFiveAnswered(q5, q5Answered, q5Type);
+
+            //If the timer was done or if you answered all the questions, it automatically runs the function checkAnswered and redirects you to the score page. If you left 1 or more questions unsanswered, then it pops up an alert warning you that you did not answer however mann questions and if you are sure you want to submit. 
             if (timerDone == true)
             {
                 checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type);
@@ -121,6 +132,7 @@ onload="startTimer()"
             
         }
 
+        //Checks if a multiple choice or true/false questions was answered or not. Called in the check() function
         function checkMultipleChoice(x, y)
         {
             for (i = 0; i < x.length; i++)
@@ -139,6 +151,7 @@ onload="startTimer()"
             }
         }
 
+        //Based on what the 5th question's type is, gets its value
         function QuestionFive(q5Type)
         {
             if (q5Type == "MCQ1")
@@ -163,6 +176,7 @@ onload="startTimer()"
             }
         }
 
+        //Checks whether the 5th question was answered or not
         function checkQuestionFiveAnswered(q5, q5Answered, q5Type)
         {
             if (q5Type == "MCQ1" || q5Type == "TFQ1")
@@ -195,6 +209,7 @@ onload="startTimer()"
             }
         }
 
+        //Checks your answers to see how many you got right and stores them in a localStorage variable so that they can be used in score.html
         function checkAnswers(q1, q2, q3, q4, q5, q5Type)
         {
             correct = 0;  
@@ -322,10 +337,13 @@ onload="startTimer()"
                 localStorage.setItem("q5UserAnswer", "Unanswered")
             }
             
+            //The user's score out of 100
             var score = (correct/5) * 100;
 
+            //Stores the user's score in a variable in localStorage so that it can be used in score.html
             localStorage.setItem("score", score);
 
+            //Redirect to the score.html page
             location.href = "http://127.0.0.1:5000/score";
         }
 
@@ -334,10 +352,12 @@ onload="startTimer()"
         
     </script>
     
+    <!-- The timer text  -->
     <div id="testTimer" class="right">
         <p id="testTimerText"></p>
     </div>
 
+    <!-- The 1st multiple choice question. Based on what the answer is, the value of the input in each set changes. For example, if the answer is A, then the first input tag's value will be correct while the others are incorrect.  -->
     <form name="MCQ" id="MCQ">
         <div>
             <p> 1. {{ MCQ[0] }} </p>
@@ -368,6 +388,7 @@ onload="startTimer()"
 
     <br>
 
+    <!-- The True/False question.  -->
     <form name="TFQ" id="TFQ">
         <div>
             <p> 2. {{ TFQ[0] }} </p>
@@ -382,6 +403,8 @@ onload="startTimer()"
         </div>
     </form>
     <br>
+
+    <!-- The fill-in-the-blank question.  -->
     <form name="FITB" id="FITB">
         <div>
             <p> 3. {{ FITB[0] }} </p>
@@ -391,6 +414,8 @@ onload="startTimer()"
     </form>
     <br>
     <br>
+
+    <!-- The dropdown question.  -->
     <form>
         <label> 4. {{ Dropdown[0] }} </label>
         {% if Dropdown[5].strip() == "1" %}
@@ -431,6 +456,7 @@ onload="startTimer()"
     </form>
     <br>
 
+    <!-- The 5th question will be based on what randomQ is, which was randomly chosen as one of the four types of questions on this quiz.  -->
     {% if randomQ == "MCQ" %}
     <form name="MCQ1" id="question5">
         <div>
@@ -550,5 +576,7 @@ onload="startTimer()"
         {% endif %}
     </form>
     {% endif %}
+
+    <!-- The submit button which when clicked, runs the check() javascript function.  -->
     <button class="button" type="button" onclick="check()">Submit</button>
 {% endblock %}
