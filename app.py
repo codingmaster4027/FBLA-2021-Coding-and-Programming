@@ -36,13 +36,11 @@ def beforetest():
 @app.route("/test")
 def test():
     num_list = list(range(0, 20))
-    global x
     #Chooses a random number between 0 and 19 to be the index of a MCQ question in the MCQ table
     x = random.choice(num_list)
     num_list.remove(x)
 
     list1 = list(range(0, 10))
-    global y
     #Chooses a random number between 0 and 9 to be the index of a True/False, Fill-In-The-Blank, and Dropdown question
     y = random.choice(list1)
     list1.remove(y)
@@ -51,206 +49,85 @@ def test():
     question_type = ["MCQ", "TFQ", "FITB", "Dropdown"]
     global randomQ
     randomQ = random.choice(question_type)
-    global a
+
     a = random.choice(num_list)
-    global b
+
     b = random.choice(list1)
 
     #Gets the MCQ question, all the answer choices, and the correct answer and stores them in variables
-    MCQQ = str(MCQTable[x][1])
-    MCQA = str(MCQTable[x][2])
-    MCQB = str(MCQTable[x][3])
-    MCQC = str(MCQTable[x][4])
-    MCQD = str(MCQTable[x][5])
-    MCQCorrect = str(MCQTable[x][6])
+    global MCQ
+    MCQ = []
+    for i in range(6):
+        MCQ.append(str(MCQTable[x][i+1]))
 
     #Gets the TFQ question and its correct answer and stores them in variables
-    TFQ = str(TFTable[y][1])
-    TFCorrect = str(TFTable[y][2])
+    global TFQ
+    TFQ = []
+    for i in range(2):
+        TFQ.append(str(TFTable[y][i+1]))
 
     #Gets the Fill-In-The-Blank question and its correct answer and stores them in variables
-    FITBQ = str(FITBTable[y][1])
-    FITBCorrect = str(FITBTable[y][2])
+    global FITB
+    FITB = []
+    for i in range(2):
+        FITB.append(str(FITBTable[y][i+1]))
 
     #Gets the Dropdown question, all the answer choices, and the correct answer and stores them in variables
-    DQ = str(DTable[y][0])
-    D1 = str(DTable[y][1])
-    D2 = str(DTable[y][2])
-    D3 = str(DTable[y][3])
-    D4 = str(DTable[y][4])
-    DCorrect = str(DTable[y][5])
+    global Dropdown
+    Dropdown = []
+    for i in range(6):
+        Dropdown.append(str(DTable[y][i]))
+
+    global MCQ1
+    global TFQ1
+    global FITB1
+    global Dropdown1
 
     #Based on what the fifth question was, it stores in variables the question, answer choices, and the correct answer
     if randomQ == "MCQ":
-        MCQQ1 = str(MCQTable[a][1])
-        MCQA1 = str(MCQTable[a][2])
-        MCQB1 = str(MCQTable[a][3])
-        MCQC1 = str(MCQTable[a][4])
-        MCQD1 = str(MCQTable[a][5])
-        MCQCorrect1 = str(MCQTable[a][6])
+        MCQ1 = []
+        for i in range(6):
+            MCQ1.append(str(MCQTable[a][i+1]))
+
         TFQ1 = None
-        TFCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
+        FITB1 = None
+        Dropdown1 = None
 
     elif randomQ == "TFQ":
-        TFQ1 = str(TFTable[b][1])
-        TFCorrect1 = str(TFTable[b][2])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
+        TFQ1 = []
+        for i in range(2):
+            TFQ1.append(str(TFTable[b][i+1]))
+
+        MCQ1 = None
+        FITB1 = None
+        Dropdown1 = None
 
     elif randomQ == "FITB":
-        FITBQ1 = str(FITBTable[b][1])
-        FITBCorrect1 = str(FITBTable[b][2])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
+        FITB1 = []
+        for i in range(2):
+            FITB1.append(str(FITBTable[b][i+1]))
+
+        MCQ1 = None
         TFQ1 = None
-        TFCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
+        Dropdown1 = None
 
     else:
-        DQ1 = str(DTable[b][0])
-        D11 = str(DTable[b][1])
-        D21 = str(DTable[b][2])
-        D31 = str(DTable[b][3])
-        D41 = str(DTable[b][4])
-        DCorrect1 = str(DTable[b][5])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
-        TFQ1 = None
-        TFCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
+        Dropdown1 = []
+        for i in range(6):
+            Dropdown1.append(str(DTable[b][i]))
 
-    return render_template("test.html", MCQ=MCQQ, A=MCQA, B=MCQB, C=MCQC, D=MCQD, TFQ=TFQ, FITBQ=FITBQ, DQ=DQ, D1=D1, D2=D2, D3=D3, D4=D4, MCQQ1=MCQQ1, MCQA1=MCQA1, MCQB1=MCQB1, MCQC1=MCQC1, MCQD1=MCQD1, TFQ1=TFQ1, FITBQ1=FITBQ1, DQ1=DQ1, D11=D11, D21=D21, D31=D31, D41=D41, randomQ=randomQ, MCQCorrect=MCQCorrect, MCQCorrect1=MCQCorrect1, FITBCorrect=FITBCorrect, FITBCorrect1=FITBCorrect1, DCorrect=DCorrect, DCorrect1=DCorrect1, TFCorrect=TFCorrect, TFCorrect1=TFCorrect1)
+        MCQ1 = None
+        TFQ1 = None
+        FITB1 = None
+
+    return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1, TFQ1=TFQ1, FITB1=FITB1, Dropdown1=Dropdown1)
 
 #Page which shows your score after the test
 @app.route("/score")
 def score():
+    print(randomQ)
     #Returns all the questions, answer choices, and correct answers that were on the test
-    MCQQ = str(MCQTable[x][1])
-    MCQA = str(MCQTable[x][2])
-    MCQB = str(MCQTable[x][3])
-    MCQC = str(MCQTable[x][4])
-    MCQD = str(MCQTable[x][5])
-    MCQCorrect = str(MCQTable[x][6])
-
-    TFQ = str(TFTable[y][1])
-    TFCorrect = str(TFTable[y][2])
-
-    FITBQ = str(FITBTable[y][1])
-    FITBCorrect = str(FITBTable[y][2])
-
-    DQ = str(DTable[y][0])
-    D1 = str(DTable[y][1])
-    D2 = str(DTable[y][2])
-    D3 = str(DTable[y][3])
-    D4 = str(DTable[y][4])
-    DCorrect = str(DTable[y][5])
-
-    if randomQ == "MCQ":
-        MCQQ1 = str(MCQTable[a][1])
-        MCQA1 = str(MCQTable[a][2])
-        MCQB1 = str(MCQTable[a][3])
-        MCQC1 = str(MCQTable[a][4])
-        MCQD1 = str(MCQTable[a][5])
-        MCQCorrect1 = str(MCQTable[a][6])
-        TFQ1 = None
-        TFCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
-
-    elif randomQ == "TFQ":
-        TFQ1 = str(TFTable[b][1])
-        TFCorrect1 = str(TFTable[b][2])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
-
-    elif randomQ == "FITB":
-        FITBQ1 = str(FITBTable[b][1])
-        FITBCorrect1 = str(FITBTable[b][2])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
-        TFQ1 = None
-        TFCorrect1 = None
-        DQ1 = None
-        D11 = None
-        D21 = None
-        D31 = None
-        D41 = None
-        DCorrect1 = None
-
-    else:
-        DQ1 = str(DTable[b][0])
-        D11 = str(DTable[b][1])
-        D21 = str(DTable[b][2])
-        D31 = str(DTable[b][3])
-        D41 = str(DTable[b][4])
-        DCorrect1 = str(DTable[b][5])
-        MCQQ1 = None
-        MCQA1 = None
-        MCQB1 = None
-        MCQC1 = None
-        MCQD1 = None
-        MCQCorrect1 = None
-        TFQ1 = None
-        TFCorrect1 = None
-        FITBQ1 = None
-        FITBCorrect1 = None
-    return render_template("score.html", MCQ=MCQQ, A=MCQA, B=MCQB, C=MCQC, D=MCQD, TFQ=TFQ, FITBQ=FITBQ, DQ=DQ, D1=D1, D2=D2, D3=D3, D4=D4, MCQQ1=MCQQ1, MCQA1=MCQA1, MCQB1=MCQB1, MCQC1=MCQC1, MCQD1=MCQD1, TFQ1=TFQ1, FITBQ1=FITBQ1, DQ1=DQ1, D11=D11, D21=D21, D31=D31, D41=D41, randomQ=randomQ, MCQCorrect=MCQCorrect, MCQCorrect1=MCQCorrect1, FITBCorrect=FITBCorrect, FITBCorrect1=FITBCorrect1, DCorrect=DCorrect, DCorrect1=DCorrect1, TFCorrect=TFCorrect, TFCorrect1=TFCorrect1)
+    return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1, TFQ1=TFQ1, FITB1=FITB1, Dropdown1=Dropdown1)
 
 #Runs the app
 if __name__ == "__main__":
