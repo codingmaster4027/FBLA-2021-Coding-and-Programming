@@ -35,59 +35,59 @@ Your Score
 
 <h1> Question Analysis </h1>
 
-<p> 1. {{ MCQ }} </p>
-<p> A. {{A}} </p>
-<p> B. {{B}} </p>
-<p> C. {{C}} </p>
-<p> D. {{D}} </p>
+<p> 1. {{ MCQ[0] }} </p>
+<p> A. {{MCQ[1]}} </p>
+<p> B. {{MCQ[2]}} </p>
+<p> C. {{MCQ[3]}} </p>
+<p> D. {{MCQ[4]}} </p>
 <p id="q1UserAnswerChoice"> </p>
-<p> Correct Answer: {{MCQCorrect}} </p>
+<p> Correct Answer: {{MCQ[5]}} </p>
 <br>
 <br>
-<p> 2. {{TFQ}} </p>
+<p> 2. {{TFQ[0]}} </p>
 <p id="q2UserAnswerChoice"></p>
-<p> Correct Answer: {{TFCorrect}} </p>
+<p> Correct Answer: {{TFQ[1]}} </p>
 <br>
 <br>
-<p>3. {{FITBQ}} </p>
+<p>3. {{FITB[0]}} </p>
 <p id="q3UserAnswer"></p>
-<p> Correct Answer: {{FITBCorrect}} </p>
+<p> Correct Answer: {{FITB[1]}} </p>
 <br>
 <br>
-<p>4. {{DQ}} </p>
-<p> Answer Choice 1: {{D1}} </p>
-<p> Answer Choice 2: {{D2}} </p>
-<p> Answer Choice 3: {{D3}} </p>
-<p> Answer Choice 4: {{D4}} </p>
+<p>4. {{Dropdown[0]}} </p>
+<p> Answer Choice 1: {{Dropdown[1]}} </p>
+<p> Answer Choice 2: {{Dropdown[2]}} </p>
+<p> Answer Choice 3: {{Dropdown[3]}} </p>
+<p> Answer Choice 4: {{Dropdown[4]}} </p>
 <p id="q4UserAnswer"> </p>
-<p> Correct Answer: Answer Choice {{DCorrect}} </p>
+<p> Correct Answer: Answer Choice {{Dropdown[5]}} </p>
 <br>
 <br>
 {% if randomQ == "MCQ" %}
-    <p> 5. {{ MCQQ1 }} </p>
-    <p> A. {{MCQA1}} </p>
-    <p> B. {{MCQB1}} </p>
-    <p> C. {{MCQC1}} </p>
-    <p> D. {{MCQD1}} </p>
+    <p> 5. {{ MCQ1[0] }} </p>
+    <p> A. {{MCQ1[1]}} </p>
+    <p> B. {{MCQ1[2]}} </p>
+    <p> C. {{MCQ1[3]}} </p>
+    <p> D. {{MCQ1[4]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{MCQCorrect1}} </p>
+    <p> Correct Answer: {{MCQ1[5]}} </p>
 {% elif randomQ == "TFQ" %}
-    <p> 5. {{TFQ1}} </p>
+    <p> 5. {{TFQ1[0]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{TFCorrect1}} </p>
+    <p> Correct Answer: {{TFQ1[1]}} </p>
 {% elif randomQ == "FITB" %}
-    <p>5. {{FITBQ1}} </p>
+    <p>5. {{FITB1[0]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{FITBCorrect1}} </p>
+    <p> Correct Answer: {{FITB1[1]}} </p>
 
 {% else %}
-    <p>5. {{DQ1}} </p>
-    <p> Answer Choice 1: {{D11}} </p>
-    <p> Answer Choice 2: {{D21}} </p>
-    <p> Answer Choice 3: {{D31}} </p>
-    <p> Answer Choice 4: {{D41}} </p>
+    <p>5. {{Dropdown1[0]}} </p>
+    <p> Answer Choice 1: {{Dropdown1[1]}} </p>
+    <p> Answer Choice 2: {{Dropdown1[2]}} </p>
+    <p> Answer Choice 3: {{Dropdown1[3]}} </p>
+    <p> Answer Choice 4: {{Dropdown1[4]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: Answer Choice {{DCorrect1}} </p>
+    <p> Correct Answer: Answer Choice {{Dropdown1[5]}} </p>
 {% endif %}
 <br>
 <br>
