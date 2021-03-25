@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Bootstrap stylesheet -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 	<title>
@@ -9,6 +10,7 @@
 		{% endblock %}
 	</title>
 
+    <!-- Common style for each page: same beige background color and button design -->
 	<style>
 		body {
             background-color: #bdb175;
@@ -35,6 +37,7 @@
 	</style>
 </head>
 
+<!-- The navbar is not common in all the pages because the test page shouldn't have the navbar -->
 {% block nav %}
 {% endblock %}
 
