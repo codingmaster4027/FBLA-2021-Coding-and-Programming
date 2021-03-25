@@ -50,21 +50,18 @@ onload="startTimer()"
             );
         }
 
-        var correct;
-        var q5; 
-        var q5Answered = true; 
-        var q5UserAnswer; 
-        var unans;
-
-        var q1ans = true;
-        var q2ans = true;
-        var q3ans = true;
-        var q4ans = true;
-        var q5ans = true;
-
         function check()
         { 
-            unans = 0; 
+            globalThis.correct;
+            globalThis.q5; 
+            globalThis.q5UserAnswer; 
+            globalThis.q5Answered = true;
+            globalThis.q1ans = true;
+            globalThis.q2ans = true;
+            globalThis.q3ans = true;
+            globalThis.q4ans = true;
+            globalThis.q5ans = true;
+            globalThis.unans = 0; 
             var q1 = document.MCQ.getElementsByTagName("input");
             var q1Answered = true;
             var q1UserAnswer = document.MCQ.MCQ.value;
@@ -343,28 +340,28 @@ onload="startTimer()"
 
     <form name="MCQ" id="MCQ">
         <div>
-            <p> 1. {{ MCQ }} </p>
-            {% if MCQCorrect.strip() == "A" %}
-            <p> <input type="radio" name="MCQ" value="correct" id="A"> {{ A }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
+            <p> 1. {{ MCQ[0] }} </p>
+            {% if MCQ[5].strip() == "A" %}
+            <p> <input type="radio" name="MCQ" value="correct" id="A"> {{ MCQ[1] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ MCQ[2] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ MCQ[3] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ MCQ[4] }} </p>
 
-            {% elif MCQCorrect.strip() == "B" %}
-            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
-            <p> <input type="radio" name="MCQ" value="correct" id="B"> {{ B }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
-            {% elif MCQCorrect.strip() == "C" %}
-            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
-            <p> <input type="radio" name="MCQ" value="correct" id="C"> {{ C }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ D }} </p>
+            {% elif MCQ[5].strip() == "B" %}
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ MCQ[1] }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="B"> {{ MCQ[2] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ MCQ[3] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ MCQ[4] }} </p>
+            {% elif MCQ[5].strip() == "C" %}
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ MCQ[1] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ MCQ[2] }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="C"> {{ MCQ[3] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="D"> {{ MCQ[4] }} </p>
             {% else %}
-            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ A }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ B }} </p>
-            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ C }} </p>
-            <p> <input type="radio" name="MCQ" value="correct" id="D"> {{ D }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="A"> {{ MCQ[1] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="B"> {{ MCQ[2] }} </p>
+            <p> <input type="radio" name="MCQ" value="incorrect" id="C"> {{ MCQ[3] }} </p>
+            <p> <input type="radio" name="MCQ" value="correct" id="D"> {{ MCQ[4] }} </p>
             {% endif %}
         </div>
     </form>
@@ -373,8 +370,8 @@ onload="startTimer()"
 
     <form name="TFQ" id="TFQ">
         <div>
-            <p> 2. {{ TFQ }} </p>
-            {% if TFCorrect.strip() == "True" %}
+            <p> 2. {{ TFQ[0] }} </p>
+            {% if TFQ[1].strip() == "True" %}
             <p> <input type="radio" name="TFQ" value="correct" id="True"> True </p>
             <p> <input type="radio" name="TFQ" value="incorrect" id="False"> False </p>
             {% else %}
@@ -387,48 +384,48 @@ onload="startTimer()"
     <br>
     <form name="FITB" id="FITB">
         <div>
-            <p> 3. {{ FITBQ }} </p>
+            <p> 3. {{ FITB[0] }} </p>
             <br>
-            <input type="text" name="{{FITBCorrect}}" id="UserAnswer" autocomplete="off">
+            <input type="text" name="{{FITB[1]}}" id="UserAnswer" autocomplete="off">
         </div>
     </form>
     <br>
     <br>
     <form>
-        <label> 4. {{ DQ }} </label>
-        {% if DCorrect.strip() == "1" %}
+        <label> 4. {{ Dropdown[0] }} </label>
+        {% if Dropdown[5].strip() == "1" %}
         <select id="Dropdown">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ D1 }} </option>
-            <option value="incorrect" id="2"> {{ D2 }} </option>
-            <option value="incorrect" id="3"> {{ D3 }} </option>
-            <option value="incorrect" id="4"> {{ D4 }} </option>
+            <option value="correct" id="1"> {{ Dropdown[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown[4] }} </option>
         </select>
 
-        {% elif DCorrect.strip() == "2" %}
+        {% elif Dropdown[5].strip() == "2" %}
         <select id="Dropdown">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="incorrect" id="1"> {{ D1 }} </option>
-            <option value="correct" id="2"> {{ D2 }} </option>
-            <option value="incorrect" id="3"> {{ D3 }} </option>
-            <option value="incorrect" id="4"> {{ D4 }} </option>
+            <option value="incorrect" id="1"> {{ Dropdown[1] }} </option>
+            <option value="correct" id="2"> {{ Dropdown[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown[4] }} </option>
         </select>
 
-        {% elif DCorrect.strip() == "3" %}
+        {% elif Dropdown[5].strip() == "3" %}
         <select id="Dropdown">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="incorrect" id="1"> {{ D1 }} </option>
-            <option value="incorrect" id="2"> {{ D2 }} </option>
-            <option value="correct" id="3"> {{ D3 }} </option>
-            <option value="incorrect" id="4"> {{ D4 }} </option>
+            <option value="incorrect" id="1"> {{ Dropdown[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown[2] }} </option>
+            <option value="correct" id="3"> {{ Dropdown[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown[4] }} </option>
         </select>
         {% else %}
         <select id="Dropdown">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="incorrect" id="1"> {{ D1 }} </option>
-            <option value="incorrect" id="2"> {{ D2 }} </option>
-            <option value="incorrect" id="3"> {{ D3 }} </option>
-            <option value="correct" id="4"> {{ D4 }} </option>
+            <option value="incorrect" id="1"> {{ Dropdown[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown[3] }} </option>
+            <option value="correct" id="4"> {{ Dropdown[4] }} </option>
         </select>
         {% endif %}
     </form>
@@ -437,36 +434,36 @@ onload="startTimer()"
     {% if randomQ == "MCQ" %}
     <form name="MCQ1" id="question5">
         <div>
-            <p> 5. {{ MCQQ1.strip() }} </p>
-            {% if MCQCorrect1 == "A" %}
-            <p> <input type="radio" name="MCQ1" value="correct" id="A"> {{ MCQA1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            <p> 5. {{ MCQ1[0].strip() }} </p>
+            {% if MCQ1[5].strip() == "A" %}
+            <p> <input type="radio" name="MCQ1" value="correct" id="A"> {{ MCQ1[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
             <br>
             <br>
 
-            {% elif MCQCorrect1.strip() == "B" %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="B"> {{ MCQB1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            {% elif MCQ1[5].strip() == "B" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="B"> {{ MCQ1[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
             <br>
             <br>
 
-            {% elif MCQCorrect1.strip() == "C" %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="C"> {{ MCQC1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQD1 }} </p>
+            {% elif MCQ1[5].strip() == "C" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="C"> {{ MCQ1[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
             <br>
             <br>
 
             {% else %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQA1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQB1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQC1 }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="D"> {{ MCQD1 }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="D"> {{ MCQ1[4] }} </p>
             <br>
             <br>
             {% endif %}
@@ -476,8 +473,8 @@ onload="startTimer()"
     {% elif randomQ == "TFQ" %}
     <form name="TFQ1" id="question5">
         <div>
-            <p> 5. {{ TFQ1 }} </p>
-            {% if TFCorrect1.strip() == "True" %}
+            <p> 5. {{ TFQ1[0] }} </p>
+            {% if TFQ1[1].strip() == "True" %}
             <p> <input type="radio" name="TFQ1" value="correct" id="True"> True </p>
             <p> <input type="radio" name="TFQ1" value="incorrect" id="False"> False </p>
             <br>
@@ -495,9 +492,9 @@ onload="startTimer()"
     {% elif randomQ == "FITB" %}
     <form name="FITB1" id="question5">
         <div>
-            <p> 5. {{ FITBQ1 }} </p>
+            <p> 5. {{ FITB1[0] }} </p>
             <br>
-            <input type="text" name="{{FITBCorrect1}}" id="UserAnswer1" autocomplete="off">
+            <input type="text" name="{{FITB1[1]}}" id="UserAnswer1" autocomplete="off">
             <br>
             <br>
         </div>
@@ -505,36 +502,36 @@ onload="startTimer()"
 
     {% else %}
     <form name="Dropdown1" id="question5">
-        <label> 5. {{ DQ1 }} </label>
-        {% if DCorrect1.strip() == "1" %}
+        <label> 5. {{ Dropdown1[0] }} </label>
+        {% if Dropdown1[5].strip() == "1" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ D11 }} </option>
-            <option value="incorrect" id="2"> {{ D21 }} </option>
-            <option value="incorrect" id="3"> {{ D31 }} </option>
-            <option value="incorrect" id="4"> {{ D41 }} </option>
+            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
         </select>
         <br>
         <br>
 
-        {% elif DCorrect1.strip() == "2" %}
+        {% elif Dropdown1[5].strip() == "2" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ D11 }} </option>
-            <option value="correct" id="2"> {{ D21 }} </option>
-            <option value="incorrect" id="3"> {{ D31 }} </option>
-            <option value="incorrect" id="4"> {{ D41 }} </option>
+            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
+            <option value="correct" id="2"> {{ Dropdown1[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
         </select>
         <br>
         <br>
         
-        {% elif DCorrect1.strip() == "3" %}
+        {% elif Dropdown1[5].strip() == "3" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ D11 }} </option>
-            <option value="incorrect" id="2"> {{ D21 }} </option>
-            <option value="correct" id="3"> {{ D31 }} </option>
-            <option value="incorrect" id="4"> {{ D41 }} </option>
+            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
+            <option value="correct" id="3"> {{ Dropdown1[3] }} </option>
+            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
         </select>
         <br>
         <br>
@@ -542,10 +539,10 @@ onload="startTimer()"
         {% else %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ D11 }} </option>
-            <option value="incorrect" id="2"> {{ D21 }} </option>
-            <option value="incorrect" id="3"> {{ D31 }} </option>
-            <option value="correct" id="4"> {{ D41 }} </option>
+            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
+            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
+            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
+            <option value="correct" id="4"> {{ Dropdown1[4] }} </option>
         </select>
         <br>
         <br>
