@@ -5,6 +5,7 @@
 Your Score
 {% endblock %}
 
+<!-- The navbar -->
 {% block nav %}
 <body {% block func %} {% endblock %}>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,9 +30,12 @@ Your Score
 {% endblock %}
 
 {% block body %}
+<!-- Displays your score -->
 <h1>Your Score:</h1>
 
 <h2 id="score"> </h2>
+
+<!-- Displays the questions and answer choices that were on the test that you just took. Displays what you answered and what the correct answer was. -->
 
 <h1> Question Analysis </h1>
 
@@ -94,6 +98,7 @@ Your Score
 <button class="button" type="button" onclick="window.print()">Print Your Results</button>
 
 <script>
+    //Gets the user's answer for each question fron localStorage and displays them in the <p> tags above. 
     var score = localStorage.getItem("score"); 
     document.getElementById("score").innerHTML = score + "%"; 
     var q1UserAnswerChoice = localStorage.getItem("q1UserAnswerChoice"); 
