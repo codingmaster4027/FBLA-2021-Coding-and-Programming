@@ -9,6 +9,7 @@ Test Instructions
 text-align: center; 
 {% endblock %}
 
+<!-- The navbar -->
 {% block nav %}
 <body {% block func %} {% endblock %}>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -34,7 +35,7 @@ text-align: center;
 
 {% block body %}
 <h1>Test Instructions</h1>
-<p>You are about to take a 5-question test which will consist of 4 types of questions: multiple choice, true or false, dropdown, and fill in the blank. You will have 15 minutes to take the test and when you are finished, click the "Submit" button at the bottom of the page. You will receive your score immediately after you submit the test. </p>
+<p>You are about to take a 5-question test which will consist of 4 types of questions: multiple choice, true or false, dropdown, and fill in the blank. You will have 20 minutes to take the test and when you are finished, click the "Submit" button at the bottom of the page. You will receive your score immediately after you submit the test. </p>
 <p>Click the "Start" button below to start the test. You will not be able to pause the timer once you start.</p>
 <button class="button" type="button" onclick="location.href = 'http://127.0.0.1:5000/test'">Start</button>
 
