@@ -6,12 +6,12 @@ import sqlite3
 
 app = Flask(__name__)
 
-#Connects to sqlite database
+#Connects to sqlite3 database
 sql_connect = sqlite3.connect('questions.sqlite3', check_same_thread = False)
 
 cursor = sql_connect.cursor()
 
-#Gets all the tables for each type of question
+#Gets all the tables for each type of question: multiple choice, True/False, fill-in-the-blank, and dropdown
 MCQTable = cursor.execute("SELECT * FROM MCQ;").fetchall()
 TFTable = cursor.execute("SELECT * FROM TFQ;").fetchall()
 FITBTable = cursor.execute("SELECT * FROM FITB;").fetchall()
@@ -22,7 +22,7 @@ DTable = cursor.execute("SELECT * FROM Dropdown;").fetchall()
 def index():
     return render_template("index.html")
 
-#Page which shows all the questions
+#Page which shows all the questions, answer choices, and answers for viewing by the user. Passes in the tables with each type of question into the template
 @app.route("/database")
 def database():
     return render_template("database.html", MCQTable = MCQTable, TFTable = TFTable, FITBQ=FITBTable, Dropdown=DTable)
@@ -50,29 +50,30 @@ def test():
     global randomQ
     randomQ = random.choice(question_type)
 
+    #Chooses a random number to be the index of the 5th question; uses "a" if the 5th questions is a MCQ, and "b" if it is anything else
     a = random.choice(num_list)
 
     b = random.choice(list1)
 
-    #Gets the MCQ question, all the answer choices, and the correct answer and stores them in variables
+    #Gets the MCQ question, all the answer choices, and the correct answer and stores them in a list
     global MCQ
     MCQ = []
     for i in range(6):
         MCQ.append(str(MCQTable[x][i+1]))
 
-    #Gets the TFQ question and its correct answer and stores them in variables
+    #Gets the TFQ question and its correct answer and stores them in a list
     global TFQ
     TFQ = []
     for i in range(2):
         TFQ.append(str(TFTable[y][i+1]))
 
-    #Gets the Fill-In-The-Blank question and its correct answer and stores them in variables
+    #Gets the Fill-In-The-Blank question and its correct answer and stores them in a list
     global FITB
     FITB = []
     for i in range(2):
         FITB.append(str(FITBTable[y][i+1]))
 
-    #Gets the Dropdown question, all the answer choices, and the correct answer and stores them in variables
+    #Gets the Dropdown question, all the answer choices, and the correct answer and stores them in a list
     global Dropdown
     Dropdown = []
     for i in range(6):
@@ -83,7 +84,7 @@ def test():
     global FITB1
     global Dropdown1
 
-    #Based on what the fifth question was, it stores in variables the question, answer choices, and the correct answer
+    #Based on what the fifth question was, it stores in the corresponding list the question, answer choices, and the correct answer
     if randomQ == "MCQ":
         MCQ1 = []
         for i in range(6):
@@ -125,12 +126,12 @@ def test():
 #Page which shows your score after the test
 @app.route("/score")
 def score():
-    print(randomQ)
-    #Returns all the questions, answer choices, and correct answers that were on the test
+    #Returns all the questions, answer choices, and correct answers that were on the test. Also returns what type of question that 5th question was.
     return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1, TFQ1=TFQ1, FITB1=FITB1, Dropdown1=Dropdown1)
 
 #Runs the app
 if __name__ == "__main__":
 	app.run(debug = True)
 
+#Closes the connection to the sqlite3 database
 sql_connect.close()
