@@ -1,7 +1,6 @@
 #I developed a Flask application/website to complete this project. Programming languages used were Python, SQL, HTML, CSS, and Javascript. Storage is in a Sqlite3 database. 
 import random
-from flask import Flask, redirect, render_template, request, session, url_for
-import sys; sys.path
+from flask import Flask, render_template
 import sqlite3
 
 app = Flask(__name__)
@@ -45,16 +44,6 @@ def test():
     y = random.choice(list1)
     list1.remove(y)
 
-    #Chooses a random question type for the 5th question
-    question_type = ["MCQ", "TFQ", "FITB", "Dropdown"]
-    global randomQ
-    randomQ = random.choice(question_type)
-
-    #Chooses a random number to be the index of the 5th question; uses "a" if the 5th questions is a MCQ, and "b" if it is anything else
-    a = random.choice(num_list)
-
-    b = random.choice(list1)
-
     #Gets the MCQ question, all the answer choices, and the correct answer and stores them in a list
     global MCQ
     MCQ = []
@@ -79,59 +68,69 @@ def test():
     for i in range(6):
         Dropdown.append(str(DTable[y][i]))
 
-    global MCQ1
-    global TFQ1
-    global FITB1
-    global Dropdown1
+    #Chooses a random question type for the 5th question
+    question_type = ["MCQ", "TFQ", "FITB", "Dropdown"]
+    global randomQ
+    randomQ = random.choice(question_type)    
 
     #Based on what the fifth question was, it stores in the corresponding list the question, answer choices, and the correct answer
     if randomQ == "MCQ":
+        #Chooses a random number to be the index of the 5th question
+        a = random.choice(num_list)
+
+        global MCQ1
         MCQ1 = []
         for i in range(6):
             MCQ1.append(str(MCQTable[a][i+1]))
 
-        TFQ1 = None
-        FITB1 = None
-        Dropdown1 = None
-
-    elif randomQ == "TFQ":
-        TFQ1 = []
-        for i in range(2):
-            TFQ1.append(str(TFTable[b][i+1]))
-
-        MCQ1 = None
-        FITB1 = None
-        Dropdown1 = None
-
-    elif randomQ == "FITB":
-        FITB1 = []
-        for i in range(2):
-            FITB1.append(str(FITBTable[b][i+1]))
-
-        MCQ1 = None
-        TFQ1 = None
-        Dropdown1 = None
-
+        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1)
     else:
-        Dropdown1 = []
-        for i in range(6):
-            Dropdown1.append(str(DTable[b][i]))
+        #Chooses a random number to be the index of the 5th question
+        b = random.choice(list1)
 
-        MCQ1 = None
-        TFQ1 = None
-        FITB1 = None
+        if randomQ == "TFQ":
+            global TFQ1
 
-    return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1, TFQ1=TFQ1, FITB1=FITB1, Dropdown1=Dropdown1)
+            TFQ1 = []
+            for i in range(2):
+                TFQ1.append(str(TFTable[b][i+1]))
+
+            return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, TFQ1=TFQ1)
+
+        elif randomQ == "FITB":
+            global FITB1
+
+            FITB1 = []
+            for i in range(2):
+                FITB1.append(str(FITBTable[b][i+1]))
+
+            return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, FITB1=FITB1)
+
+        else:
+            global Dropdown1
+            
+            Dropdown1 = []
+            for i in range(6):
+                Dropdown1.append(str(DTable[b][i]))
+
+            return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, Dropdown1=Dropdown1)
 
 #Page which shows your score after the test
 @app.route("/score")
 def score():
     #Returns all the questions, answer choices, and correct answers that were on the test. Also returns what type of question that 5th question was.
-    return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1, TFQ1=TFQ1, FITB1=FITB1, Dropdown1=Dropdown1)
+    if randomQ == "MCQ":
+        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1)
+    elif randomQ == "TFQ":
+        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, TFQ1=TFQ1)
+    elif randomQ == "FITB":
+        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, FITB1=FITB1)
+    else:
+        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, Dropdown1=Dropdown1)
 
 #Runs the app
 if __name__ == "__main__":
-	app.run(debug = True)
+    app.run(debug = True)
 
 #Closes the connection to the sqlite3 database
 sql_connect.close()
