@@ -1,6 +1,6 @@
 # FBLA-2021-Coding-and-Programming
 
-This is my project for 2021 NCFBLA Coding and Programming for States. 
+This is my project for 2021 FBLA Coding and Programming for Nationals. 
 
 It is a website which has a 5-question quiz with four types of questions: multiple choice, true/false, fill-in-the-blank, and dropdown. The quiz consists of FBLA questions from objective tests from various different FBLA events. The quiz also has a 20-minute time limit. If you haven't answered any of the questions, an alert will pop up warning you that you didn't answer however many questions and if you are sure you want to submit the quiz. 
 
