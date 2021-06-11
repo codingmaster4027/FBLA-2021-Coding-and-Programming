@@ -15,7 +15,7 @@ Citations:
 FBLA Logo Picture: 
 FBLA. FBLA-PBL Logo. www.fbla-pbl.org/media/FBLA-Logo-Color.png. 
 
-All questions used for the test come from past FBLA objective tests. 
+All questions used for the test come from past and practice FBLA objective tests from Quizlet.
 
 Navigation Bar:
 From Bootstrap:
