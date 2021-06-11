@@ -21,31 +21,25 @@ onload="startTimer()"
 
 {% block body %}
     <script>
-        var timerDone = false; 
+
+        //Timer minutes and seconds
+        var min = 0; 
+        var sec = 0; 
 
         //The function to start and run the timer
         function startTimer()
         {
-            var min = 20
-            var sec = 0
             var timer = setInterval(
             function() {
-                if (min == 0 && sec==0)
+                document.getElementById('testTimerText').innerHTML = min + ':' + sec;
+                if (sec == 59)
                 {
-                    timerDone = true; 
-                    check();
+                    sec = -1;
+                    min++;
                 }
-                else
-                {
-                    document.getElementById('testTimerText').innerHTML = min + ':' + sec;
-                    if (sec == 0)
-                    {
-                        sec = 60;
-                        min--;
-                    }
 
-                    sec--;
-                }
+                sec++;
+                
             }
             , 1000
             );
@@ -107,29 +101,28 @@ onload="startTimer()"
             checkQuestionFiveAnswered(q5, q5Answered, q5Type);
 
             //If the timer was done or if you answered all the questions, it automatically runs the function checkAnswered and redirects you to the score page. If you left 1 or more questions unsanswered, then it pops up an alert warning you that you did not answer however mann questions and if you are sure you want to submit. 
-            if (timerDone == true)
+            if (unans >= 1)
             {
-                checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type);
-            }
-            else
-            {
-                if (unans >= 1)
-                {
-                    if (confirm("You did not answer " + unans + " question(s)! Are you sure you want to submit?"))
-                    {
-                        checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type); 
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
+                if (confirm("You did not answer " + unans + " question(s)! Are you sure you want to submit?"))
                 {
                     checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type); 
                 }
+                else
+                {
+                    return false;
+                }
             }
-            
+            else
+            {
+                if (confirm("Are you sure you want to submit?"))
+                {
+                    checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type);  
+                }
+                else
+                {
+                    return false;
+                }
+            } 
         }
 
         //Checks if a multiple choice or true/false questions was answered or not. Called in the check() function
@@ -342,14 +335,16 @@ onload="startTimer()"
 
             //Stores the user's score in a variable in localStorage so that it can be used in score.html
             localStorage.setItem("score", score);
+            localStorage.setItem("correct", correct); 
+
+            //Store the user's time taken in a variable in localStorage so that it can be used in score.html
+            var realSec = sec-1; 
+            localStorage.setItem("time", min + ":" + realSec); 
 
             //Redirect to the score.html page
             location.href = "http://127.0.0.1:5000/score";
         }
 
-        
-        
-        
     </script>
     
     <!-- The timer text  -->
