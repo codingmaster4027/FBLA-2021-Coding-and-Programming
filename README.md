@@ -26,3 +26,5 @@ From Bootstrap:
 https://getbootstrap.com/docs/4.3/getting-started/introduction/
 
 https://getbootstrap.com/docs/4.3/components/navbar/
+
+Code from the Python SQLite Backup API comes from the Python documentation: https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup
