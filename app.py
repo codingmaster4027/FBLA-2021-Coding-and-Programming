@@ -63,7 +63,7 @@ def test():
         if randomQ == "MCQ":
             global MCQIndices
 
-            MCQIndices.remove(x)
+            MCQIndices.remove(MCQIndex)
 
             q5Index = random.choice(MCQIndices)
 
