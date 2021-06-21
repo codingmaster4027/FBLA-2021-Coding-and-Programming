@@ -5,31 +5,10 @@
 Your Score
 {% endblock %}
 
-<!-- The navbar -->
-{% block nav %}
-<body {% block func %} {% endblock %}>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="http://127.0.0.1:5000/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://127.0.0.1:5000/beforetest">Take the Test</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://127.0.0.1:5000/database">Database of Questions</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-{% endblock %}
-
 {% block body %}
+<!-- Congrats the user on completing the test -->
+<h1 id="congrats">  </h1>
+
 <!-- Displays your score -->
 <h1>Your Score:</h1>
 
@@ -74,42 +53,62 @@ Your Score
 <br>
 <br>
 {% if randomQ == "MCQ" %}
-    <p> 5. {{ MCQ1[0] }} </p>
-    <p> A. {{MCQ1[1]}} </p>
-    <p> B. {{MCQ1[2]}} </p>
-    <p> C. {{MCQ1[3]}} </p>
-    <p> D. {{MCQ1[4]}} </p>
+    <p> 5. {{ q5[0] }} </p>
+    <p> A. {{q5[1]}} </p>
+    <p> B. {{q5[2]}} </p>
+    <p> C. {{q5[3]}} </p>
+    <p> D. {{q5[4]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{MCQ1[5]}} </p>
+    <p> Correct Answer: {{q5[5]}} </p>
 {% elif randomQ == "TFQ" %}
-    <p> 5. {{TFQ1[0]}} </p>
+    <p> 5. {{q5[0]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{TFQ1[1]}} </p>
+    <p> Correct Answer: {{q5[1]}} </p>
 {% elif randomQ == "FITB" %}
-    <p>5. {{FITB1[0]}} </p>
+    <p>5. {{q5[0]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: {{FITB1[1]}} </p>
+    <p> Correct Answer: {{q5[1]}} </p>
 
 {% else %}
-    <p>5. {{Dropdown1[0]}} </p>
-    <p> Answer Choice 1: {{Dropdown1[1]}} </p>
-    <p> Answer Choice 2: {{Dropdown1[2]}} </p>
-    <p> Answer Choice 3: {{Dropdown1[3]}} </p>
-    <p> Answer Choice 4: {{Dropdown1[4]}} </p>
+    <p>5. {{q5[0]}} </p>
+    <p> Answer Choice 1: {{q5[1]}} </p>
+    <p> Answer Choice 2: {{q5[2]}} </p>
+    <p> Answer Choice 3: {{q5[3]}} </p>
+    <p> Answer Choice 4: {{q5[4]}} </p>
     <p id="q5UserAnswer"> </p>
-    <p> Correct Answer: Answer Choice {{Dropdown1[5]}} </p>
+    <p> Correct Answer: Answer Choice {{q5[5]}} </p>
 {% endif %}
 <br>
 <br>
+
+<!-- Shows previous test scores and time taken on those tests -->
+<h1> Previous Test Scores </h1>
+<div id="prev">
+
+</div>
+
+<!-- Shows a graph showing accuracy and time taken over time -->
+<h1> Graph Showing Accuracy and Time Taken Over Time </h1>
+
+<div id="chart_div">
+    
+</div>   
+
+<!-- Print Button -->
 <button class="button" type="button" onclick="window.print()">Print Your Results</button>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script>
-    //Gets the user's answer for each question fron localStorage and displays them in the <p> tags above. Also, gets the user's time and displays it. 
+    //Gets the user's name, score, time taken, and their answer for each question fron localStorage and displays them in the <p> tags above.
+    var name = localStorage.getItem("name"); 
+    document.getElementById("congrats").innerHTML = "Congratulations " + name + "! You have completed the test! Here are you results:"; 
     var score = localStorage.getItem("score");
     var correct = localStorage.getItem("correct");  
     document.getElementById("score").innerHTML = score + "%, " + correct + "/5"; 
-    var time = localStorage.getItem("time"); 
-    document.getElementById("time").innerHTML = time; 
+    var min = localStorage.getItem("min"); 
+    var sec = localStorage.getItem("sec"); 
+    document.getElementById("time").innerHTML = min + " minutes, " + sec + " second(s)"; 
     var q1UserAnswerChoice = localStorage.getItem("q1UserAnswerChoice"); 
     document.getElementById("q1UserAnswerChoice").innerHTML = "You Answered: " + q1UserAnswerChoice; 
     var q2UserAnswerChoice = localStorage.getItem("q2UserAnswerChoice"); 
@@ -120,5 +119,87 @@ Your Score
     document.getElementById("q4UserAnswer").innerHTML = "You Answered: " + q4UserAnswer;
     var q5UserAnswer = localStorage.getItem("q5UserAnswer"); 
     document.getElementById("q5UserAnswer").innerHTML = "You Answered: " + q5UserAnswer;
+
+    //Gets the user's past number of questions correct and time taken
+    var numCorrect = JSON.parse(localStorage.getItem("numCorrect"));
+    var minutes = JSON.parse(localStorage.getItem("minutes"));
+    var seconds = JSON.parse(localStorage.getItem("seconds")); 
+
+    var length = numCorrect.length;  
+
+    //Loops through the numCorrect, minutes, and seconds lists and displays them in the previous test scores section above. Also sotres the data to be used to create the graph. If it is the user's first time taking the test, the previous test scores section and graph section will show "None"
+    if (length == 1)
+    {
+        document.getElementById("prev").innerHTML = "None"; 
+        document.getElementById("chart_div").innerHTML = "No graph to show (only one attempt)";
+    }
+    else
+    {
+        var graphData = [];
+
+        document.getElementById("prev").innerHTML = "";
+
+        for (i = 0; i < length - 1; i++)
+        {
+            var num = i + 1; 
+            var result = document.createElement("P"); 
+            result.innerHTML = num + ". " + numCorrect[i] + "/5, Time Taken: " + minutes[i] + " minutes and " + seconds[i] + " second(s)"; 
+            document.getElementById("prev").appendChild(result); 
+            var space = document.createElement("BR"); 
+            document.getElementById("prev").appendChild(space); 
+            var graphSecs = minutes[i] * 60 + seconds[i]
+            graphData.push([num, numCorrect[i], graphSecs]); 
+        }
+
+        var graphSecsLast = minutes[length-1] * 60 + seconds[length-1];
+        graphData.push([length, numCorrect[length-1], graphSecsLast]);
+        
+        google.charts.load('current', {'packages':['line', 'corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+          var button = document.getElementById('change-chart');
+          var chartDiv = document.getElementById('chart_div');
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('number', 'Attempt #');
+          data.addColumn('number', "Accuracy (Number of Questions Correct out of 5)");
+          data.addColumn('number', "Time Taken (in seconds)");
+
+          data.addRows(graphData);
+
+          var materialOptions = {
+            chart: {
+              title: 'Accuracy and Time Taken Over Attempts'
+            },
+            width: 900,
+            height: 500,
+            series: {
+              // Gives each series an axis name that matches the Y-axis below.
+              0: {axis: 'Accuracy'},
+              1: {axis: 'Time'}
+            },
+            axes: {
+              // Adds labels to each axis; they don't have to match the axis names.
+              y: {
+                Accuracy: {label: '# of Questions Correct (out of 5)'},
+                Time: {label: 'Time Taken (in seconds)'}
+              }
+            }
+          };
+
+          function drawMaterialChart() {
+            var materialChart = new google.charts.Line(chartDiv);
+            materialChart.draw(data, materialOptions);
+            button.innerText = 'Change to Classic';
+            button.onclick = drawClassicChart;
+          }
+
+          drawMaterialChart();
+
+        }
+    }
 </script>
+
 {% endblock %}
