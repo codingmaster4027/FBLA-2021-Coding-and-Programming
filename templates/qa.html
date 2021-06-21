@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+Interactive Q & A
+{% endblock %}
+
+<!-- Code for the chatbot (interactive Q&A). Code not written by me, it was written by Heri Kaniugu:  https://youtu.be/AMakWEj5vKQ -->
+{% block body %}
+<div style="font-size: 30px;" id="main">
+    <div>You: <span id="user"></span></div>
+    <div>Chatbot: <span id="chatbot"></span></div>
+    <div><input id="input" type="text" autocomplete="off"/></div>
+</div>
+<script type="text/javascript">
+var trigger = [
+    ["hi","hey","hello"], 
+    ["i need help", "i have a question", "help me"],
+    ["who are you", "are you human", "are you a bot", "are you a human or bot"],
+    ["whats on the test", "what does the test consist of"],
+    ["how do i get around the website", "how do i get around", "how do i navigate the website"],
+    ["what do i do after the test", "what happens after the test"],
+    ["whats the contact information", "contact", "contact info", "whats the contact info"],
+    ["where are the questions", "where can I see all the questions"],
+    ["how was this website created", "how was this test created", "how was this website made"],
+    ["wheres the code for this", "wheres the documentation for this"]
+];
+var reply = [
+    ["Hi.", "Hello."], 
+    ["What do you need help with?", "What's your question?"],
+    ["I am a chatbot."],
+    ["The test has 5 questions with four different question types. There is no time limit so you can take as much time as you want."],
+    ["You can use the navbar at the top to navigate the website. You can also use the buttons on each page to get to different pages."],
+    ["After you submit the test, you will see your score, how many answers you got right, how long it took you to complete the test, and the questions and which onces you answered correctly or incorrectly and what the right answer was."],
+    ["You can contact fakeemail@fake.com"],
+    ["You can see all the questions on the database page. Click 'Database of Questions' on the navbar. "],
+    ["This website was made with a Flask application using Python, HTML, CSS, and Javascript. Storage is in a sqlite3 database with a dynamic backup feature. "],
+    ["Here's the github link for this website: https://github.com/codingmaster4027/FBLA-2021-Coding-and-Programming.git"]
+];
+var alternative = ["Sorry I do not understand", "Sorry, I did not understand what you said"];
+document.querySelector("#input").addEventListener("keypress", function(e){
+    var key = e.which || e.keyCode;
+    if(key === 13){ //Enter button
+        var input = document.getElementById("input").value;
+        document.getElementById("user").innerHTML = input;
+        output(input);
+    }
+});
+function output(input){
+    try{
+        var product = input + "=" + eval(input);
+    } catch(e){
+        var text = (input.toLowerCase()).replace(/[^\w\s\d]/gi, ""); //remove all chars except words, space and 
+        text = text.replace(/ a /g, " ").replace(/i feel /g, "").replace(/whats/g, "what is").replace(/please /g, "").replace(/ please/g, "");
+        if(compare(trigger, reply, text)){
+            var product = compare(trigger, reply, text);
+        } else {
+            var product = alternative[Math.floor(Math.random()*alternative.length)];
+        }
+    }
+    document.getElementById("chatbot").innerHTML = product;
+    document.getElementById("input").value = ""; //clear input value
+}
+function compare(arr, array, string){
+    var item;
+    for(var x=0; x<arr.length; x++){
+        for(var y=0; y<array.length; y++){
+            if(arr[x][y] == string){
+                items = array[x];
+                item =  items[Math.floor(Math.random()*items.length)];
+            }
+        }
+    }
+    return item;
+}
+</script>
+
+<!-- FAQ Section -->
+<h1> FAQ </h1>
+<b> What does the test consist of? </b>
+<p>The quiz consists of 5 questions with 4 different types of questions (multiple choice, true/false, fill-in-the-blank, and dropdown). There is no time limit on the test. You will receive your score immediately after you submit the test, along with which questions you answered correctly and incorrectly and the amount of time you took on the test. You can also print out your test results. You can take the test again but keep in mind that the quiz will also be randomized each time, with questions being taken from a 50-question database. </p>
+
+<b> Is there a time limit? </b>
+<p> There is no time limit for the test but after the test you can see how much time you took on the test. </p>
+
+<b> What happens after I submit the test? </b>
+<p> After you submit the test, you will see your score, how many answers you got right, how long it took you to complete the test, and you will be able to see the questions and which onces you answered correctly or incorrectly and what the right answer was.  </p>
+{% endblock %}
