@@ -49,7 +49,8 @@ onload="startTimer()"
         function check()
         { 
             //Creates global variables that can be used in other functions
-            globalThis.correct;
+            globalThis.correct = 0;
+            globalThis.unans = 0; 
             globalThis.q5; 
             globalThis.q5UserAnswer; 
             globalThis.q5Answered = true;
@@ -58,26 +59,23 @@ onload="startTimer()"
             globalThis.q3ans = true;
             globalThis.q4ans = true;
             globalThis.q5ans = true;
-            globalThis.unans = 0; 
 
             //For the first 4 questions, gets the user's answer for that question and/or the value of the user's answer (whether is was correct or not)
             var q1 = document.MCQ.getElementsByTagName("input");
-            var q1Answered = true;
             var q1UserAnswer = document.MCQ.MCQ.value;
-            var q2 = document.TFQ.getElementsByTagName("input");
-            var q2Answered = true; 
+            var q2 = document.TFQ.getElementsByTagName("input"); 
             var q2UserAnswer = document.TFQ.TFQ.value;
             var q3 = document.getElementById('UserAnswer').value.trim().toLowerCase(); 
             var q4 = document.getElementById("Dropdown").value; 
 
             //Checks if each of the first four questions was answered or left blank
-            if (checkMultipleChoice(q1, q1Answered) == false)
+            if (checkMultipleChoice(q1, q1ans) == false)
             {
                 unans++; 
                 q1UserAnswer = "incorrect";
                 q1ans = false;  
             }
-            if (checkMultipleChoice(q2, q2Answered) == false)
+            if (checkMultipleChoice(q2, q2ans) == false)
             {
                 unans++; 
                 q2UserAnswer = "incorrect"; 
@@ -114,7 +112,7 @@ onload="startTimer()"
             }
             else
             {
-                if (confirm("Are you sure you want to submit?"))
+                if (confirm("You have answered all questions. Are you sure you want to submit?"))
                 {
                     checkAnswers(q1UserAnswer, q2UserAnswer, q3, q4, q5UserAnswer, q5Type);  
                 }
@@ -134,7 +132,6 @@ onload="startTimer()"
                 {
                     y = true; 
                     return y; 
-                    break;  
                 }
                 if (i == x.length-1)
                 {
@@ -204,8 +201,7 @@ onload="startTimer()"
 
         //Checks your answers to see how many you got right and stores them in a localStorage variable so that they can be used in score.html
         function checkAnswers(q1, q2, q3, q4, q5, q5Type)
-        {
-            correct = 0;  
+        { 
             if (q1ans == true)
             {
                 if (q1=="correct")
@@ -339,7 +335,21 @@ onload="startTimer()"
 
             //Store the user's time taken in a variable in localStorage so that it can be used in score.html
             var realSec = sec-1; 
-            localStorage.setItem("time", min + ":" + realSec); 
+            localStorage.setItem("min", min);
+            localStorage.setItem("sec", realSec); 
+
+            //Store's the user's number of questions right and time taken to be stored in a list for score comparisons in score.html
+            var numCorrect = JSON.parse(localStorage.getItem("numCorrect"));
+            var minutes = JSON.parse(localStorage.getItem("minutes"));
+            var seconds = JSON.parse(localStorage.getItem("seconds"));  
+
+            numCorrect.push(correct); 
+            minutes.push(min); 
+            seconds.push(realSec); 
+
+            localStorage.setItem("numCorrect", JSON.stringify(numCorrect));
+            localStorage.setItem("minutes", JSON.stringify(minutes));
+            localStorage.setItem("seconds", JSON.stringify(seconds)); 
 
             //Redirect to the score.html page
             location.href = "http://127.0.0.1:5000/score";
@@ -455,36 +465,36 @@ onload="startTimer()"
     {% if randomQ == "MCQ" %}
     <form name="MCQ1" id="question5">
         <div>
-            <p> 5. {{ MCQ1[0].strip() }} </p>
-            {% if MCQ1[5].strip() == "A" %}
-            <p> <input type="radio" name="MCQ1" value="correct" id="A"> {{ MCQ1[1] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
+            <p> 5. {{ q5[0].strip() }} </p>
+            {% if q5[5].strip() == "A" %}
+            <p> <input type="radio" name="MCQ1" value="correct" id="A"> {{ q5[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ q5[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ q5[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ q5[4] }} </p>
             <br>
             <br>
 
-            {% elif MCQ1[5].strip() == "B" %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="B"> {{ MCQ1[2] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
+            {% elif q5[5].strip() == "B" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ q5[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="B"> {{ q5[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ q5[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ q5[4] }} </p>
             <br>
             <br>
 
-            {% elif MCQ1[5].strip() == "C" %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="C"> {{ MCQ1[3] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ MCQ1[4] }} </p>
+            {% elif q5[5].strip() == "C" %}
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ q5[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ q5[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="C"> {{ q5[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="D"> {{ q5[4] }} </p>
             <br>
             <br>
 
             {% else %}
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ MCQ1[1] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ MCQ1[2] }} </p>
-            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ MCQ1[3] }} </p>
-            <p> <input type="radio" name="MCQ1" value="correct" id="D"> {{ MCQ1[4] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="A"> {{ q5[1] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="B"> {{ q5[2] }} </p>
+            <p> <input type="radio" name="MCQ1" value="incorrect" id="C"> {{ q5[3] }} </p>
+            <p> <input type="radio" name="MCQ1" value="correct" id="D"> {{ q5[4] }} </p>
             <br>
             <br>
             {% endif %}
@@ -494,8 +504,8 @@ onload="startTimer()"
     {% elif randomQ == "TFQ" %}
     <form name="TFQ1" id="question5">
         <div>
-            <p> 5. {{ TFQ1[0] }} </p>
-            {% if TFQ1[1].strip() == "True" %}
+            <p> 5. {{ q5[0] }} </p>
+            {% if q5[1].strip() == "True" %}
             <p> <input type="radio" name="TFQ1" value="correct" id="True"> True </p>
             <p> <input type="radio" name="TFQ1" value="incorrect" id="False"> False </p>
             <br>
@@ -513,9 +523,9 @@ onload="startTimer()"
     {% elif randomQ == "FITB" %}
     <form name="FITB1" id="question5">
         <div>
-            <p> 5. {{ FITB1[0] }} </p>
+            <p> 5. {{ q5[0] }} </p>
             <br>
-            <input type="text" name="{{FITB1[1]}}" id="UserAnswer1" autocomplete="off">
+            <input type="text" name="{{q5[1]}}" id="UserAnswer1" autocomplete="off">
             <br>
             <br>
         </div>
@@ -523,36 +533,36 @@ onload="startTimer()"
 
     {% else %}
     <form name="Dropdown1" id="question5">
-        <label> 5. {{ Dropdown1[0] }} </label>
-        {% if Dropdown1[5].strip() == "1" %}
+        <label> 5. {{ q5[0] }} </label>
+        {% if q5[5].strip() == "1" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
-            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
-            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
-            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
+            <option value="correct" id="1"> {{ q5[1] }} </option>
+            <option value="incorrect" id="2"> {{ q5[2] }} </option>
+            <option value="incorrect" id="3"> {{ q5[3] }} </option>
+            <option value="incorrect" id="4"> {{ q5[4] }} </option>
         </select>
         <br>
         <br>
 
-        {% elif Dropdown1[5].strip() == "2" %}
+        {% elif q5[5].strip() == "2" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
-            <option value="correct" id="2"> {{ Dropdown1[2] }} </option>
-            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
-            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
+            <option value="correct" id="1"> {{ q5[1] }} </option>
+            <option value="correct" id="2"> {{ q5[2] }} </option>
+            <option value="incorrect" id="3"> {{ q5[3] }} </option>
+            <option value="incorrect" id="4"> {{ q5[4] }} </option>
         </select>
         <br>
         <br>
         
-        {% elif Dropdown1[5].strip() == "3" %}
+        {% elif q5[5].strip() == "3" %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
-            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
-            <option value="correct" id="3"> {{ Dropdown1[3] }} </option>
-            <option value="incorrect" id="4"> {{ Dropdown1[4] }} </option>
+            <option value="correct" id="1"> {{ q5[1] }} </option>
+            <option value="incorrect" id="2"> {{ q5[2] }} </option>
+            <option value="correct" id="3"> {{ q5[3] }} </option>
+            <option value="incorrect" id="4"> {{ q5[4] }} </option>
         </select>
         <br>
         <br>
@@ -560,10 +570,10 @@ onload="startTimer()"
         {% else %}
         <select id="Dropdown1">
             <option value="choose" id="0 (you did not select anything)"> Choose </option>
-            <option value="correct" id="1"> {{ Dropdown1[1] }} </option>
-            <option value="incorrect" id="2"> {{ Dropdown1[2] }} </option>
-            <option value="incorrect" id="3"> {{ Dropdown1[3] }} </option>
-            <option value="correct" id="4"> {{ Dropdown1[4] }} </option>
+            <option value="correct" id="1"> {{ q5[1] }} </option>
+            <option value="incorrect" id="2"> {{ q5[2] }} </option>
+            <option value="incorrect" id="3"> {{ q5[3] }} </option>
+            <option value="correct" id="4"> {{ q5[4] }} </option>
         </select>
         <br>
         <br>
