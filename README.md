@@ -8,9 +8,7 @@ After you submit the quiz, you can see your score and all the questions, what yo
 
 You can also see the database of all the possible questions on the quiz. There are 20 multiple choice questions, 10 true/false questions, 10 fill-in-the-blank questions, and 10 dropdown questions, for a total of 50 possible questions. On the database page, you can also see all the answer choices and the correct answer to the question. 
 
-There is also an interactive Q&A with an AI chatbot and a FAQ. 
-
-There is a navbar at the top for navigation, a popup help menu, and a Google Translate feature so that people all over the world can use this website. 
+There are also many interactive features which make the website convenient and easy to use for you, the user. For example, there is an interactive Q&A with an AI chatbot, a FAQ page, a navbar at the top, a popup help menu, and a Google Translate feature which translates the webpage into any language so that people all over the world can use the website. 
 
 This project was created using Flask with Python. Programming languages used were Python, HTML, CSS, Javascript, and SQL. The questions database is stored in a SQlite3 database and has a dynamic backup feature using a Sqlite backup API in case the original database gets altered or corrupted. 
 
