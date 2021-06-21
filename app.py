@@ -1,15 +1,26 @@
 #I developed a Flask application/website to complete this project. Programming languages used were Python, SQL, HTML, CSS, 
-#and Javascript. Storage is in a Sqlite3 database. 
+#and Javascript. Storage is in a Sqlite3 database and there is a dynamic backup feature using a Sqlite backup API. 
 import random
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
 
-#Connects to sqlite3 database
-sql_connect = sqlite3.connect('questions.sqlite3', check_same_thread = False)
+#Lines 10-11, 17-18 come from the Python documentation: https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup
+def progress(status, remaining, total):
+    print(f'Copied {total-remaining} of {total} pages...')
 
-cursor = sql_connect.cursor()
+#Connects to sqlite3 database and creates backup database
+sql_connect = sqlite3.connect('questions.sqlite3', check_same_thread = False)
+backup = sqlite3.connect('backup.sqlite3', check_same_thread=False)
+
+with backup:
+    sql_connect.backup(backup, pages=1, progress=progress)
+
+try:
+    cursor = sql_connect.cursor()
+except:
+    cursor = backup.cursor()
 
 #Gets all the tables for each type of question: multiple choice, True/False, fill-in-the-blank, and dropdown
 MCQTable = cursor.execute("SELECT * FROM MCQ;").fetchall()
@@ -17,8 +28,13 @@ TFTable = cursor.execute("SELECT * FROM TFQ;").fetchall()
 FITBTable = cursor.execute("SELECT * FROM FITB;").fetchall()
 DTable = cursor.execute("SELECT * FROM Dropdown;").fetchall()
 
-#Home Page
+#Login page
 @app.route("/")
+def login():
+    return render_template("login.html")
+
+#Home Page
+@app.route("/home")
 def index():
     return render_template("index.html")
 
@@ -36,116 +52,112 @@ def beforetest():
 #Page with the actual test
 @app.route("/test")
 def test():
-    num_list = list(range(0, 20))
-    #Chooses a random number between 0 and 19 to be the index of an MCQ question in the MCQ table to be asked on the test. Also, 
-    #deletes that number from the list so that in case the 5th question, which is selected from a random question type, is an MCQ, 
-    #then the same MCQ while not be chosen. 
-    x = random.choice(num_list)
-    num_list.remove(x)
+    #Function which creates the fifth question on the test (which is of a random question type) and returns the test page
+    def question5(index=None):
+        global q5
+        
+        #List which is going to contain the question, answer choices, and answer
+        q5 = []
 
-    list1 = list(range(0, 10))
-    #Chooses a random number between 0 and 9 to be the index of a True/False, Fill-In-The-Blank, and Dropdown question. Also,
-    #removes that number from the list for the same reasons as above. 
+        #Fills the list with its contents based on the question type of the 5th question
+        if randomQ == "MCQ":
+            global MCQIndices
+
+            MCQIndices.remove(x)
+
+            q5Index = random.choice(MCQIndices)
+
+            for i in range(6):
+                q5.append(str(MCQTable[q5Index][i+1]))
+
+        else:
+            global nonMCQIndices
+
+            nonMCQIndices.remove(indices[index])
+
+            q5Index = random.choice(nonMCQIndices)
+
+            if randomQ == "TFQ":
+                for i in range(2):
+                    q5.append(str(TFTable[q5Index][i+1]))
+
+            elif randomQ == "FITB":
+                for i in range(2):
+                    q5.append(str(FITBTable[q5Index][i+1]))
+
+            else:
+                for i in range(6):
+                    q5.append(str(DTable[q5Index][i]))
+
+        #Returns the test page
+        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, q5=q5)
+
+    global MCQIndices
+
+    MCQIndices = list(range(0, 20))
+    #Chooses a random number between 0 and 19 to be the index of an MCQ question in the MCQ table to be asked on the test.
+    global MCQIndex
+    
+    MCQIndex = random.choice(MCQIndices)
+
+    global nonMCQIndices
+    nonMCQIndices = list(range(0, 10))
+    #Chooses a random number between 0 and 9 to be the index of a True/False, Fill-In-The-Blank, and Dropdown question.
+    global indices
     indices = []
 
     for _ in range(3):
-        y = random.choice(list1)
-        indices.append(y)
+        q234Indices = random.choice(nonMCQIndices)
+        indices.append(q234Indices)
 
-    #Gets the MCQ question, all the answer choices, and the correct answer and stores them in a list
+    #Gets the questions, all the answer choices, and the correct answer and stores them in the corresponding lists
     global MCQ
     MCQ = []
-    for i in range(6):
-        MCQ.append(str(MCQTable[x][i+1]))
 
-    #Gets the TFQ question and its correct answer and stores them in a list
     global TFQ
     TFQ = []
-    for i in range(2):
-        TFQ.append(str(TFTable[indices[0]][i+1]))
 
-    #Gets the Fill-In-The-Blank question and its correct answer and stores them in a list
     global FITB
     FITB = []
-    for i in range(2):
-        FITB.append(str(FITBTable[indices[1]][i+1]))
 
-    #Gets the Dropdown question, all the answer choices, and the correct answer and stores them in a list
     global Dropdown
     Dropdown = []
+
     for i in range(6):
+        MCQ.append(str(MCQTable[MCQIndex][i+1]))
         Dropdown.append(str(DTable[indices[2]][i]))
+        
+        if i < 2:
+            TFQ.append(str(TFTable[indices[0]][i+1]))
+            FITB.append(str(FITBTable[indices[1]][i+1]))
 
     #Chooses a random question type for the 5th question
     question_type = ["MCQ", "TFQ", "FITB", "Dropdown"]
     global randomQ
     randomQ = random.choice(question_type)    
 
-    #Based on what the fifth question was, it stores in the corresponding list the question, answer choices, and the correct answer,
-    #and it then renders the template of the page with the actual test. 
+    #Based on what the fifth question was, it returns/renders the appropriate template with the question5() function. 
     if randomQ == "MCQ":
-        #Chooses a random number to be the index of the 5th question
-        a = random.choice(num_list)
-
-        global MCQ1
-        MCQ1 = []
-        for i in range(6):
-            MCQ1.append(str(MCQTable[a][i+1]))
-
-        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1)
+        return question5()
 
     elif randomQ == "TFQ":
-        list1.remove(indices[0])
-
-        b = random.choice(list1)
-
-        global TFQ1
-
-        TFQ1 = []
-        for i in range(2):
-            TFQ1.append(str(TFTable[b][i+1]))
-
-        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, TFQ1=TFQ1)
+        return question5(0)
 
     elif randomQ == "FITB":
-        list1.remove(indices[1])
-
-        b = random.choice(list1)
-
-        global FITB1
-
-        FITB1 = []
-        for i in range(2):
-            FITB1.append(str(FITBTable[b][i+1]))
-
-        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, FITB1=FITB1)
+        return question5(1)
 
     else:
-        list1.remove(indices[2])
-
-        b = random.choice(list1)
-
-        global Dropdown1
-        
-        Dropdown1 = []
-        for i in range(6):
-            Dropdown1.append(str(DTable[b][i]))
-
-        return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, Dropdown1=Dropdown1)
+        return question5(2)
 
 #Page which shows your score after the test
 @app.route("/score")
 def score():
-    #Returns all the questions, answer choices, and correct answers that were on the test. Also returns what type of question that 
-    #5th question was.
-    if randomQ == "MCQ":
-        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, MCQ1=MCQ1)
-    elif randomQ == "TFQ":
-        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, TFQ1=TFQ1)
-    elif randomQ == "FITB":
-        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, FITB1=FITB1)
-    else:
-        return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, Dropdown1=Dropdown1)
+    return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, q5=q5)
+
+#Q & A Page with the interactive chatbot and FAQ
+@app.route("/qa")
+def qa():
+    return render_template("qa.html")
 
 #Runs the app
 if __name__ == "__main__":
@@ -153,3 +165,4 @@ if __name__ == "__main__":
 
 #Closes the connection to the sqlite3 database
 sql_connect.close()
+backup.close()
