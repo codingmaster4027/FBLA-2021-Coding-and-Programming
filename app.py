@@ -22,6 +22,12 @@ try:
 except:
     cursor = backup.cursor()
 
+#Passcode to see the database
+passcode = "None"
+
+#Counts how many times the a new passcode is generated
+db_counter = 0
+
 #Gets all the tables for each type of question: multiple choice, True/False, fill-in-the-blank, and dropdown
 MCQTable = cursor.execute("SELECT * FROM MCQ;").fetchall()
 TFTable = cursor.execute("SELECT * FROM TFQ;").fetchall()
@@ -33,16 +39,38 @@ DTable = cursor.execute("SELECT * FROM Dropdown;").fetchall()
 def login():
     return render_template("login.html")
 
-#Home Page
+#Home Page, passes in the database password to display on the home page
 @app.route("/home")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", passcode=passcode)
+
+#Page which returns the page where the user has the enter the correct password in order to access the database. However, if the user has 
+#not taken the test yet, they can access the database directly without a password. 
+@app.route("/database", methods=["POST", "GET"])
+def database():
+    if request.method == "POST":
+        user_passcode = request.form["passcode"]
+
+        if user_passcode == passcode:
+            return redirect(url_for("actualdatabase"))
+        else:
+            return redirect(url_for("error"))
+    else:
+        if db_counter == 0:
+            return redirect(url_for("actualdatabase"))
+        else:
+            return render_template("passcode.html", passcode=passcode)
 
 #Page which shows all the questions, answer choices, and answers for viewing by the user. Passes in the tables with each type of 
 #question into the template
-@app.route("/database")
-def database():
+@app.route("/actualdatabase")
+def actualdatabase():
     return render_template("database.html", MCQTable = MCQTable, TFTable = TFTable, FITBQ=FITBTable, Dropdown=DTable)
+
+#Error message page if the user entered the wrong password for the database passcode page
+@app.route("/error")
+def error():
+    return render_template("error.html")
 
 #Test instructions page
 @app.route("/beforetest")
@@ -91,6 +119,19 @@ def test():
 
         #Returns the test page
         return render_template("test.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, q5=q5)
+    
+    global passcode
+    global db_counter
+
+    #Increases db_counter by 1
+    db_counter += 1
+
+    #Creates a new-random 9-digit passcode
+    for i in range(9):
+        if i == 0:
+            passcode = str(random.randint(0, 9))
+        else:
+            passcode += str(random.randint(0, 9))
 
     global MCQIndices
 
@@ -152,7 +193,7 @@ def test():
 #Page which shows your score after the test
 @app.route("/score")
 def score():
-    return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, q5=q5)
+    return render_template("score.html", randomQ=randomQ, MCQ=MCQ, TFQ=TFQ, FITB=FITB, Dropdown=Dropdown, q5=q5, passcode=passcode)
 
 #Q & A Page with the interactive chatbot and FAQ
 @app.route("/qa")
