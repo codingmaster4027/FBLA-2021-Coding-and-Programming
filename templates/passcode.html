@@ -1,0 +1,16 @@
+<!-- Page in which the user is prompted to enter the passcode to access the database -->
+{% extends "base.html" %}
+
+{% block title %}
+Restricted Access
+{% endblock %}
+
+{% block body %}
+<b> You must finish the test in order to receive the passcode to the database. Every time you start a test, a new passcode is generated. </b>
+
+<form action="#" method="post" autocomplete="off">
+    <p>Enter passcode:</p>
+    <p> <input type="text" name="passcode"> </p>
+    <p> <input type="submit" value="Submit"> </p>
+</form>
+{% endblock %}
