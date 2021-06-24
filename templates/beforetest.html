@@ -1,4 +1,4 @@
-<!-- This is the page which shows the test instructions before the start of the test -->
+<!-- This is the page which shows the test instructions before the start of the test. Also makes sure the database page isn't open before starting the test. -->
 {% extends "base.html" %}
 
 {% block title %}
@@ -15,5 +15,23 @@ text-align: center;
 <h1>Test Instructions</h1>
 <p>You are about to take a 5-question test which will consist of 4 types of questions: multiple choice, true or false, dropdown, and fill in the blank. When you are finished, click the "Submit" button at the bottom of the page. You will receive your score immediately after you submit the test, along with which questions you answered correctly and incorrectly and the amount of time you took on the test. </p>
 <p>Click the "Start" button below to start the test.</p>
-<button class="button" type="button" onclick="location.href = 'http://127.0.0.1:5000/test'">Start</button>
+<button class="button" type="button" onclick="check_db()">Start</button>
+
+<!-- Script which makes sure the user doesn't have the database answers page open before starting the test. -->
+<script>
+function check_db()
+{
+    var on_db_page = localStorage.getItem("on_db_page"); 
+
+    if (on_db_page === "true")
+    {
+        alert("Error: You must close the database page before starting the test")
+    }
+    
+    if (on_db_page === "false")
+    {
+        window.location.href="http://127.0.0.1:5000/test";
+    }
+}
+</script>
 {% endblock %}
