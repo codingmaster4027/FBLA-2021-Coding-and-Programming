@@ -1,3 +1,4 @@
+<!-- Page which initializes some variables and prompts the user to enter their name -->
 <html>
 <head>
 <title>
@@ -81,15 +82,17 @@ function checkInput()
 }
 </script>
 
-<!-- Creates the lists for the user's number of questions correct and time taken to be used later after they take multiple attempts at the test -->
+<!-- Creates the lists for the user's number of questions correct and time taken to be used later after they take multiple attempts at the test. Also stores a variable called on_db_page which checks if the user is on the database page or not. -->
 <script>
 var numCorrect = []; 
 var minutes = []; 
 var seconds = []; 
+var on_db_page = "false"; 
 
 localStorage.setItem("numCorrect", JSON.stringify(numCorrect));
 localStorage.setItem("minutes", JSON.stringify(minutes));
 localStorage.setItem("seconds", JSON.stringify(seconds));
+localStorage.setItem("on_db_page", on_db_page); 
 </script>
 
 </body>
