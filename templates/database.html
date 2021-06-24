@@ -1,4 +1,4 @@
-<!-- This is the page which shows all the questions, the answer choices, and there answers for viewing -->
+<!-- This is the page which shows all the questions, the answer choices, and their answers for viewing -->
 {% extends "base.html" %}
 
 {% block title %}
@@ -16,6 +16,9 @@ th {
 }
 {% endblock %}
 
+{% block func %}
+onbeforeunload="return leave()"
+{% endblock %}
 
 {% block body %}
 <!-- Shows the multiple choice questions -->
@@ -139,4 +142,17 @@ th {
         {% endfor %}
     </tbody>
 </table>
+
+<!-- JS which sets on_db_page to true when the user is on this page and sets on_db_page to false when the user navigates away from this page. -->
+<script>
+    var on_db_page = localStorage.getItem("on_db_page"); 
+    on_db_page = "true"; 
+    localStorage.setItem("on_db_page", on_db_page); 
+
+    function leave()
+    {
+        var on_db_page = "false";
+        localStorage.setItem("on_db_page", on_db_page); 
+    }
+</script>
 {% endblock %}
