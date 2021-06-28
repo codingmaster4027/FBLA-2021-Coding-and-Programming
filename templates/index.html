@@ -1,4 +1,4 @@
-<!-- This is the home page with links to the test and also to the page which shows the database with all the questions. Also shows the current passcode to the database. -->
+<!-- This is the home page with links to the test, the page which shows the database with all the questions, and the Q&A Page. -->
 {% extends "base.html" %}
 
 {% block title %}
@@ -15,11 +15,6 @@ text-align: center;
 
 <h3 id="greeting"> </h3>
 <button class="button" type="button" onclick="window.location.href = 'http://127.0.0.1:5000/database';"> Click here to see the database of all the questions and answers!</button>
-
-<!-- Shows the current password to the database in case the user forgets after navigating away from score.html -->
-{% if passcode != "None" %}
-<p> Current Password to Database: {{ passcode }} </p>
-{% endif %}
 <br>
 <button class="button" type="button" onclick="window.location.href = 'http://127.0.0.1:5000/beforetest';"> Click here to take the test!</button>
 <br>
