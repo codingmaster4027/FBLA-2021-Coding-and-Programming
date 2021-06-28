@@ -82,8 +82,9 @@ function checkInput()
 }
 </script>
 
-<!-- Creates the lists for the user's number of questions correct and time taken to be used later after they take multiple attempts at the test. Also stores a variable called on_db_page which checks if the user is on the database page or not. -->
+<!-- Creates the lists for the user's number of questions correct and time taken to be used later after they take multiple attempts at the test. Also stores a variable called on_db_page which checks if the user is on the database page or not, and a variable called testActive to check if the user is currently taking the test or not. -->
 <script>
+var testActive = "false"; 
 var numCorrect = []; 
 var minutes = []; 
 var seconds = []; 
@@ -93,6 +94,7 @@ localStorage.setItem("numCorrect", JSON.stringify(numCorrect));
 localStorage.setItem("minutes", JSON.stringify(minutes));
 localStorage.setItem("seconds", JSON.stringify(seconds));
 localStorage.setItem("on_db_page", on_db_page); 
+localStorage.setItem("testActive", testActive);
 </script>
 
 </body>
