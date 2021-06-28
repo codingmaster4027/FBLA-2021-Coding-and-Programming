@@ -1,4 +1,4 @@
-<!-- This is the page which shows the user's scores, time taken, question analysis, previous test scores, graph, and passcode to the database after they have submitted the test -->
+<!-- This is the page which shows the user's scores, time taken, question analysis, previous test scores, and graph, after they have submitted the test -->
 {% extends "base.html" %}
 
 {% block title %}
@@ -81,12 +81,6 @@ Your Score
 <br>
 <br>
 
-<!-- Shows the passcode to the database so the user can access it -->
-<h1> Passcode to the Database </h1>
-<p> Here is the passcode to the database so you can study and review the questions and answers. If you start a new test, then a new random passcode will be generated. </p>
-
-<p> Passcode: {{ passcode }} </p>
-
 <!-- Shows previous test scores and time taken on those tests -->
 <h1> Previous Test Scores </h1>
 <div id="prev">
@@ -106,6 +100,9 @@ Your Score
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
+    var testActive = "false"; 
+    localStorage.setItem("testActive", testActive);
+
     //Gets the user's name, score, time taken, and their answer for each question fron localStorage and displays them in the <p> tags above.
     var name = localStorage.getItem("name"); 
     document.getElementById("congrats").innerHTML = "Congratulations " + name + "! You have completed the test! Here are you results:"; 
