@@ -21,6 +21,29 @@ onbeforeunload="return leave()"
 {% endblock %}
 
 {% block body %}
+<!-- JS which sets on_db_page to true when the user is on this page and sets on_db_page to false when the user navigates away from this page. Also, if the user is currently taking the test, don't show the database and instead display an error message. -->
+<script>
+    var testActive = localStorage.getItem("testActive"); 
+
+    if (testActive === "true")
+    {
+        window.location.href="http://127.0.0.1:5000/error";
+    }
+    else
+    {
+        var on_db_page = localStorage.getItem("on_db_page"); 
+        on_db_page = "true"; 
+        localStorage.setItem("on_db_page", on_db_page);
+    } 
+
+    function leave()
+    {
+        var on_db_page = "false";
+        localStorage.setItem("on_db_page", on_db_page); 
+    }
+    
+</script>
+
 <!-- Shows the multiple choice questions -->
 <h1> Multiple Choice Questions</h1>
 <table style="width: 100%">
@@ -142,17 +165,4 @@ onbeforeunload="return leave()"
         {% endfor %}
     </tbody>
 </table>
-
-<!-- JS which sets on_db_page to true when the user is on this page and sets on_db_page to false when the user navigates away from this page. -->
-<script>
-    var on_db_page = localStorage.getItem("on_db_page"); 
-    on_db_page = "true"; 
-    localStorage.setItem("on_db_page", on_db_page); 
-
-    function leave()
-    {
-        var on_db_page = "false";
-        localStorage.setItem("on_db_page", on_db_page); 
-    }
-</script>
 {% endblock %}
