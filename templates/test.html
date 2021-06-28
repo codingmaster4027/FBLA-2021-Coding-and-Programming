@@ -21,6 +21,9 @@ onload="startTimer()"
 
 {% block body %}
     <script>
+        //Sets the variable testActive to true so that database.html knows that it cannot show the user the database contents because the user is currently taking the test
+        var testActive = "true"; 
+        localStorage.setItem("testActive", testActive);
 
         //Timer minutes and seconds
         var min = 0; 
@@ -349,7 +352,7 @@ onload="startTimer()"
 
             localStorage.setItem("numCorrect", JSON.stringify(numCorrect));
             localStorage.setItem("minutes", JSON.stringify(minutes));
-            localStorage.setItem("seconds", JSON.stringify(seconds)); 
+            localStorage.setItem("seconds", JSON.stringify(seconds));  
 
             //Redirect to the score.html page
             location.href = "http://127.0.0.1:5000/score";
